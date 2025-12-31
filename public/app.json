@@ -1,0 +1,26 @@
+{
+    "pages": [
+        "pages/Home/index",
+        "pages/ProductDetail/index",
+        "pages/AddProduct/index"
+    ],
+    "window": {
+        "defaultTitle": "سوق الجيران",
+        "titleBarColor": "#ffffff",
+        "navigationStyle": "default"
+    },
+    "permission": {
+        "scope.userLocation": {
+            "desc": "نحتاج موقعك لعرض المنتجات القريبة منك وتحديد موقع الإعلان"
+        },
+        "scope.camera": {
+            "desc": "نحتاج الوصول للكاميرا لالتقاط صور وفيديوهات المنتجات"
+        },
+        "scope.writePhotosAlbum": {
+            "desc": "نحتاج الوصول لحفظ الصور والفيديوهات"
+        },
+        "scope.album": {
+            "desc": "نحتاج الوصول للألبوم لاختيار صور المنتجات"
+        }
+    }
+}

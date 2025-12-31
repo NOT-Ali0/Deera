@@ -1,0 +1,11 @@
+{
+    "component2": true,
+    "enableAppxNg": true,
+    "compileType": "mini",
+    "miniprogramRoot": "./",
+    "scripts": {
+        "beforeCompile": "",
+        "beforePreview": "",
+        "beforeUpload": ""
+    }
+}
