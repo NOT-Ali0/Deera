@@ -166,10 +166,6 @@
         // Get Location for Geo-tagging
         qi.getLocation({
             success: (location) => {
-                my.alert({
-                    title: "Selection success",
-                    content: JSON.stringify(location),
-                });
                 const newProduct = {
                     id: Date.now(),
                     name,
