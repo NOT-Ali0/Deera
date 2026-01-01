@@ -1,6 +1,7 @@
 <script>
   import { onMount, createEventDispatcher } from "svelte";
   import { qi } from "../lib/qi.js";
+    import { UserToken } from "../lib/UserInfo.js";
 
   const dispatch = createEventDispatcher();
 
@@ -49,6 +50,7 @@
 </script>
 
 <div class="home-container">
+
   <header>
     <h1>Neighbors Market</h1>
     <button class="refresh-btn" onclick={handleRefresh} disabled={isRefreshing}>
@@ -87,108 +89,144 @@
 
 <style>
   .home-container {
-    padding: 16px;
-    font-family: sans-serif;
-    padding-bottom: 80px; /* Space for fixed button */
-  }
-
-  header h1 {
-    text-align: center;
-    color: #333;
-    margin-bottom: 20px;
-  }
-
-  .product-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 16px;
-  }
-
-  .product-card {
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    overflow: hidden;
-    background: #fff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  }
-
-  .product-card img {
-    width: 100%;
-    height: 150px;
-    object-fit: cover;
-    background-color: #f0f0f0;
-  }
-
-  .info {
-    padding: 12px;
-  }
-
-  .info h3 {
-    margin: 0 0 8px 0;
-    font-size: 1rem;
-    color: #444;
-  }
-
-  .info .price {
-    margin: 0;
-    font-weight: bold;
-    color: #2e7d32;
-  }
-
-  .post-ad-btn {
-    position: fixed;
-    bottom: 24px;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 12px 24px;
-    border-radius: 24px;
-    font-size: 1rem;
-    font-weight: bold;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-    cursor: pointer;
-    z-index: 100;
-  }
-
-  .post-ad-btn:active {
-    transform: translateX(-50%) scale(0.98);
-  }
-
-  .empty-state {
-    grid-column: 1 / -1;
-    text-align: center;
-    padding: 40px;
-    color: #666;
-    font-size: 1.1rem;
+    padding: var(--spacing-md);
+    padding-bottom: 100px; /* Space for fixed button */
   }
 
   header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: var(--spacing-lg);
   }
 
   header h1 {
-    margin-bottom: 0;
+    margin: 0;
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.5px;
   }
 
   .refresh-btn {
-    background: none;
-    border: 1px solid #ddd;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    font-size: 1.2rem;
+    background: var(--surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-full);
+    width: 44px;
+    height: 44px;
+    font-size: 1.3rem;
     cursor: pointer;
-    color: #555;
+    color: var(--text-secondary);
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: all var(--transition-fast);
+    box-shadow: var(--shadow-sm);
   }
+
   .refresh-btn:hover {
-    background: #f0f0f0;
+    background: var(--background);
+    transform: rotate(90deg);
+  }
+
+  .refresh-btn:active {
+    transform: scale(0.95) rotate(90deg);
+  }
+
+  .product-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-md);
+  }
+
+  .product-card {
+    border: none;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background: var(--surface);
+    box-shadow: var(--shadow-sm);
+    cursor: pointer;
+    transition: all var(--transition-normal);
+  }
+
+  .product-card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+  }
+
+  .product-card:active {
+    transform: scale(0.98);
+  }
+
+  .product-card img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    background-color: var(--background);
+  }
+
+  .info {
+    padding: var(--spacing-md);
+  }
+
+  .info h3 {
+    margin: 0 0 var(--spacing-sm) 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.3;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+
+  .info .price {
+    margin: 0;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--success-color);
+  }
+
+  .post-ad-btn {
+    position: fixed;
+    bottom: var(--spacing-lg);
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(
+      135deg,
+      var(--primary-color) 0%,
+      var(--primary-dark) 100%
+    );
+    color: white;
+    border: none;
+    padding: 16px 32px;
+    border-radius: var(--radius-full);
+    font-size: 1.05rem;
+    font-weight: 700;
+    box-shadow: var(--shadow-lg);
+    cursor: pointer;
+    z-index: 100;
+    transition: all var(--transition-normal);
+    letter-spacing: 0.3px;
+  }
+
+  .post-ad-btn:hover {
+    box-shadow: 0 12px 32px rgba(0, 123, 255, 0.3);
+    transform: translateX(-50%) translateY(-2px);
+  }
+
+  .post-ad-btn:active {
+    transform: translateX(-50%) scale(0.95);
+  }
+
+  .empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: var(--spacing-xl) var(--spacing-md);
+    color: var(--text-muted);
+    font-size: 1.05rem;
   }
 </style>

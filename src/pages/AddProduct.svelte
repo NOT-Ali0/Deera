@@ -4,6 +4,9 @@
 
     const dispatch = createEventDispatcher();
 
+    // User token prop from App.svelte
+    export let userToken = null;
+
     // Form Data
     let name = "";
     let price = "";
@@ -178,6 +181,9 @@
                     lat: location.latitude,
                     lng: location.longitude,
                     date: new Date().toISOString(),
+                    // Attach seller information from userToken
+                    sellerPhone: userToken?.phoneNumber || "",
+                    sellerName: userToken?.fullName || "Unknown",
                 };
 
                 saveProduct(newProduct);
@@ -303,40 +309,52 @@
 
 <style>
     .add-container {
-        padding: 20px;
-        background: #fff;
+        padding: var(--spacing-lg);
+        background: var(--surface);
         min-height: 100vh;
         padding-bottom: 40px;
     }
 
     h2 {
         text-align: center;
-        margin-bottom: 24px;
-        color: #333;
+        margin-bottom: var(--spacing-lg);
+        color: var(--text-primary);
+        font-size: 1.75rem;
+        font-weight: 700;
     }
 
     .form-group {
-        margin-bottom: 20px;
+        margin-bottom: var(--spacing-lg);
     }
 
     label {
         display: block;
-        font-weight: bold;
-        margin-bottom: 8px;
-        color: #555;
-        font-size: 0.9rem;
+        font-weight: 700;
+        margin-bottom: var(--spacing-sm);
+        color: var(--text-primary);
+        font-size: 0.95rem;
     }
 
     input,
     textarea,
     .selector {
         width: 100%;
-        padding: 12px;
-        border: 1px solid #ddd;
-        border-radius: 8px;
+        padding: 14px;
+        border: 2px solid var(--border-color);
+        border-radius: var(--radius-md);
         font-size: 1rem;
-        background: #fafafa;
+        background: var(--surface);
         box-sizing: border-box;
+        transition: all var(--transition-fast);
+        color: var(--text-primary);
+        font-family: inherit;
+    }
+
+    input:focus,
+    textarea:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
     }
 
     .selector {
@@ -344,34 +362,50 @@
         justify-content: space-between;
         align-items: center;
         cursor: pointer;
-        color: #333;
+        color: var(--text-primary);
+        background: var(--background);
+    }
+
+    .selector:hover {
+        border-color: var(--primary-color);
+    }
+
+    .selector:active {
+        transform: scale(0.99);
+    }
+
+    .arrow {
+        color: var(--text-muted);
+        font-size: 0.85rem;
     }
 
     .media-section {
-        margin-bottom: 24px;
+        margin-bottom: var(--spacing-xl);
     }
 
     .media-grid {
         display: flex;
-        gap: 12px;
+        gap: var(--spacing-md);
         overflow-x: auto;
-        padding-bottom: 8px;
+        padding-bottom: var(--spacing-sm);
     }
 
     .media-item {
         position: relative;
-        width: 80px;
-        height: 80px;
+        width: 90px;
+        height: 90px;
         flex-shrink: 0;
-        border-radius: 8px;
+        border-radius: var(--radius-md);
         overflow: hidden;
-        border: 1px solid #eee;
+        border: 2px solid var(--border-color);
+        box-shadow: var(--shadow-sm);
     }
 
     .media-item img {
         width: 100%;
         height: 100%;
         object-fit: cover;
+        cursor: pointer;
     }
 
     .video-item {
@@ -383,70 +417,117 @@
 
     .video-icon {
         color: white;
-        font-size: 1.5rem;
+        font-size: 1.8rem;
     }
 
     .remove-btn {
         position: absolute;
         top: 0;
         right: 0;
-        background: rgba(0, 0, 0, 0.6);
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(4px);
         color: white;
         border: none;
-        width: 20px;
-        height: 20px;
+        width: 24px;
+        height: 24px;
         display: flex;
         align-items: center;
         justify-content: center;
         cursor: pointer;
-        font-size: 12px;
-        border-bottom-left-radius: 4px;
+        font-size: 16px;
+        border-bottom-left-radius: var(--radius-sm);
+        transition: all var(--transition-fast);
+    }
+
+    .remove-btn:hover {
+        background: rgba(0, 0, 0, 0.9);
+    }
+
+    .remove-btn:active {
+        transform: scale(0.95);
     }
 
     .add-media-btn {
-        width: 80px;
-        height: 80px;
-        border: 2px dashed #ddd;
-        border-radius: 8px;
-        background: none;
+        width: 90px;
+        height: 90px;
+        border: 2px dashed var(--border-color);
+        border-radius: var(--radius-md);
+        background: var(--background);
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        color: #888;
+        color: var(--text-muted);
         cursor: pointer;
         flex-shrink: 0;
+        transition: all var(--transition-fast);
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+
+    .add-media-btn:hover {
+        border-color: var(--primary-color);
+        color: var(--primary-color);
+        background: var(--primary-light);
+    }
+
+    .add-media-btn:active {
+        transform: scale(0.95);
     }
 
     .add-media-btn span {
-        font-size: 1.5rem;
-        margin-bottom: 4px;
+        font-size: 1.8rem;
+        margin-bottom: var(--spacing-xs);
     }
 
     .actions {
         display: flex;
-        gap: 16px;
-        margin-top: 32px;
+        gap: var(--spacing-md);
+        margin-top: var(--spacing-xl);
     }
 
     .btn {
         flex: 1;
-        padding: 14px;
+        padding: 16px;
         border: none;
-        border-radius: 25px;
-        font-weight: bold;
-        font-size: 1rem;
+        border-radius: var(--radius-md);
+        font-weight: 700;
+        font-size: 1.05rem;
         cursor: pointer;
+        transition: all var(--transition-normal);
+        letter-spacing: 0.3px;
     }
 
     .cancel {
-        background: #f0f0f0;
-        color: #555;
+        background: var(--background);
+        color: var(--text-primary);
+        border: 2px solid var(--border-color);
+    }
+
+    .cancel:hover {
+        background: #e8e8e8;
+    }
+
+    .cancel:active {
+        transform: scale(0.95);
     }
 
     .submit {
-        background: #007bff;
+        background: linear-gradient(
+            135deg,
+            var(--primary-color) 0%,
+            var(--primary-dark) 100%
+        );
         color: white;
-        box-shadow: 0 4px 6px rgba(0, 123, 255, 0.2);
+        box-shadow: var(--shadow-md);
+    }
+
+    .submit:hover {
+        box-shadow: var(--shadow-lg);
+        transform: translateY(-2px);
+    }
+
+    .submit:active {
+        transform: scale(0.95);
     }
 </style>
