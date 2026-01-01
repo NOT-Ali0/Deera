@@ -297,17 +297,10 @@
         color: var(--text-primary);
     }
 
-    /* Gallery Styles */
-    .gallery-wrapper {
-        position: relative;
-        width: 100%;
-        aspect-ratio: 1 / 1;
-        overflow: hidden;
-    }
-
+    /* Swiper Styles */
     .swiper-container {
         width: 100%;
-        height: 100%;
+        height: 380px;
         background: var(--background);
         display: flex;
         overflow-x: auto;
@@ -328,44 +321,18 @@
         scroll-snap-align: start;
     }
 
-    /* Overlay with Bottom Gradient and Dots */
-    .gallery-overlay {
+    .badge {
         position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        height: 80px;
-        background: linear-gradient(to top, rgba(0, 0, 0, 0.4), transparent);
-        display: flex;
-        align-items: flex-end;
-        justify-content: center;
-        padding-bottom: 24px;
-        pointer-events: none;
-        z-index: 10;
-    }
-
-    .pagination-dots {
-        display: flex;
-        gap: 8px;
-        background: rgba(0, 0, 0, 0.2);
-        padding: 6px 10px;
-        border-radius: 20px;
-        backdrop-filter: blur(4px);
-    }
-
-    .dot {
-        width: 6px;
-        height: 6px;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.4);
-        transition: all 0.2s ease;
-    }
-
-    .dot.active {
-        background: #fff;
-        transform: scale(1.2);
-        width: 12px;
-        border-radius: 10px;
+        bottom: 30px;
+        right: var(--spacing-md);
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(8px);
+        color: white;
+        padding: 6px 14px;
+        border-radius: 12px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        z-index: 6;
     }
 
     .content {
