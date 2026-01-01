@@ -29,24 +29,21 @@
     });
   }
 
-  // Simulate Pull-to-refresh
-  function handleRefresh() {
-    qi.showLoading({ content: "Refreshing..." });
-    setTimeout(() => {
-      // Fake delay
-      loadProducts();
-      qi.hideLoading();
-      qi.showToast({ content: "Updated", type: "success" });
-    }, 800);
-  }
+  // // Simulate Pull-to-refresh
+  // function handleRefresh() {
+  //   qi.showLoading({ content: "Refreshing..." });
+  //   setTimeout(() => {
+  //     // Fake delay
+  //     loadProducts();
+  //     qi.hideLoading();
+  //     qi.showToast({ content: "Updated", type: "success" });
+  //   }, 800);
+  // }
 
   function handlePostAd() {
-    // Dispatch navigation event to App.svelte
     dispatch("add");
   }
 
-  // Legacy functions removed or kept harmless if needed, but cleaning up is better.
-  // ... imports of qi are likely still there.
 
   function goToDetail(product) {
     dispatch("viewDetail", product);

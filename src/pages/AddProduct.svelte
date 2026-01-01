@@ -43,7 +43,6 @@
             success: (res) => {
                 const authSetting = res.authSetting || {};
                 if (authSetting["scope.album"] === false) {
-                    // Permission denied - guide to settings
                     qi.showToast({
                         content: "يرجى تفعيل صلاحية الألبوم من الإعدادات",
                         type: "none",

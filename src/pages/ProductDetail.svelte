@@ -36,17 +36,17 @@
             return;
         }
 
-        // Construct Google Maps URL
+        //  Google Maps URL
         const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${product.lat},${product.lng}`;
-            qi.setClipboard({
-                text: mapsUrl,
-                success: () => {
-                    qi.showToast({
-                        content: "تم نسخ رابط الخريطة، افتحه في المتصفح",
-                        type: "success",
-                    });
-                },
-            });
+        qi.setClipboard({
+            text: mapsUrl,
+            success: () => {
+                qi.showToast({
+                    content: "تم نسخ رابط الخريطة، افتحه في المتصفح",
+                    type: "success",
+                });
+            },
+        });
     }
 
     function handleContact() {
@@ -55,8 +55,6 @@
             success: (res) => {
                 const index = res.index;
                 if (index === 0) {
-                    // Call seller using their phone number
-                    // const phoneNumber = product.sellerPhone || "+974 5555 1234";
                     my.getStorage({
                         key: "userToken",
                         success: (res) => {
@@ -156,6 +154,12 @@
 </script>
 
 <div class="container">
+    <!-- Manual Back Button -->
+    <button class="manual-back-btn" onclick={closeDetail}>
+        <span class="icon">←</span>
+        <span class="text">رجوع</span>
+    </button>
+
     <!-- Image Swiper -->
     <div class="swiper-container">
         {#each displayImages as img, i}
@@ -217,6 +221,46 @@
         min-height: 100vh;
         display: flex;
         flex-direction: column;
+    }
+
+    /* Manual Back Button */
+    .manual-back-btn {
+        position: absolute;
+        top: 16px;
+        left: 16px;
+        z-index: 100;
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        border: none;
+        padding: 8px 16px;
+        border-radius: 100px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+        transition:
+            transform 0.2s ease,
+            background-color 0.2s;
+    }
+
+    .manual-back-btn:active {
+        transform: scale(0.95);
+        background: rgba(255, 255, 255, 0.95);
+    }
+
+    .manual-back-btn .icon {
+        font-size: 1.2rem;
+        line-height: 1;
+        color: var(--text-primary);
+        margin-top: -2px; /* Visual tweak */
+    }
+
+    .manual-back-btn .text {
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: var(--text-primary);
     }
 
     /* Swiper Styles */

@@ -18,7 +18,6 @@
     // RemoveToken();
     checkAuthentication();
 
-    // Initial setup if needed
     if (typeof my !== "undefined") {
       if (my.canIUse && my.canIUse("hideBackHome")) {
         my.hideBackHome();
@@ -82,8 +81,6 @@
 
   function handleSaveSuccess() {
     currentPage = "home";
-    // Ideally trigger a refresh on Home, but for now just switch back.
-    // Home's onMount/focus logic might handle it, or we need a refresh signal.
   }
 
   function handleCancelAdd() {
@@ -128,7 +125,6 @@
 
 <style>
   :global(:root) {
-    /* Color Variables */
     --primary-color: #007bff;
     --primary-dark: #0056b3;
     --primary-light: #e7f3ff;
@@ -146,21 +142,18 @@
     --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.12);
     --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.15);
 
-    /* Spacing Variables */
     --spacing-xs: 4px;
     --spacing-sm: 8px;
     --spacing-md: 16px;
     --spacing-lg: 24px;
     --spacing-xl: 32px;
 
-    /* Border Radius */
     --radius-sm: 8px;
     --radius-md: 12px;
     --radius-lg: 16px;
     --radius-xl: 24px;
     --radius-full: 9999px;
 
-    /* Transitions */
     --transition-fast: 150ms ease;
     --transition-normal: 250ms ease;
     --transition-slow: 350ms ease;
