@@ -3,13 +3,10 @@
     import { qi } from "../lib/qi.js";
     import { formatNumber, CURRENCY_SYMBOL } from "../lib/utils.js";
 
-    // Svelte 5 Props
     let { product = {}, onback } = $props();
 
-    // Svelte 5 State
     let currentImageIndex = $state(0);
 
-    // Svelte 5 Derived State
     let displayImages = $derived(
         product.images && product.images.length > 0
             ? product.images
@@ -168,7 +165,7 @@
 </script>
 
 <div class="container">
-    <!-- Manual Back Button -->
+    <!--Back Button -->
     <button class="manual-back-btn" onclick={closeDetail}>
         <span class="icon">←</span>
         <span class="text">رجوع</span>
@@ -232,7 +229,6 @@
             </div>
         {/if}
 
-        <!-- Secondary Actions in Content Area -->
         <div class="secondary-actions">
             <button class="contact-btn" onclick={handleContact}>
                 تواصل مع البائع
@@ -243,15 +239,12 @@
         </div>
     </div>
 
-    <!-- Fixed Bottom Bar -->
     <footer class="bottom-bar">
-        <!-- Secondary Button: Map -->
         <button class="map-btn-square" onclick={handleOpenMap} title="الموقع">
             <span class="btn-icon">📍</span>
             <span class="btn-text-short">الموقع</span>
         </button>
 
-        <!-- Primary Button: Pay -->
         <button class="pay-btn-primary" onclick={handlePay}>
             الدفع الآن
         </button>
@@ -268,7 +261,7 @@
         padding-bottom: 100px; /* Space for fixed bottom bar */
     }
 
-    /* Manual Back Button */
+    /* Back Button */
     .manual-back-btn {
         position: absolute;
         top: 16px;
@@ -329,7 +322,7 @@
         scroll-snap-align: start;
     }
 
-    .badge {
+    /* .badge {
         position: absolute;
         bottom: 30px;
         right: var(--spacing-md);
@@ -341,7 +334,7 @@
         font-size: 0.85rem;
         font-weight: 600;
         z-index: 6;
-    }
+    } */
 
     .content {
         padding: var(--spacing-lg);
@@ -447,7 +440,7 @@
         object-fit: cover;
     }
 
-    /* Secondary Actions in Content */
+    /* Secondary Actions */
     .secondary-actions {
         display: flex;
         flex-direction: column;
@@ -482,7 +475,6 @@
         transform: scale(0.98);
     }
 
-    /* Fixed Bottom Bar */
     .bottom-bar {
         position: fixed;
         bottom: 0;
@@ -490,7 +482,7 @@
         right: 0;
         max-width: 600px;
         margin: 0 auto;
-        padding: 16px 20px 30px 20px; /* Extra bottom padding for safe area */
+        padding: 16px 20px 30px 20px; 
         background: rgba(255, 255, 255, 0.7);
         backdrop-filter: blur(15px);
         -webkit-backdrop-filter: blur(15px);
@@ -502,7 +494,6 @@
         box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.08);
     }
 
-    /* Pay Button (Primary) */
     .pay-btn-primary {
         flex: 0 0 70%;
         background: linear-gradient(
@@ -525,10 +516,9 @@
         transform: scale(0.95);
     }
 
-    /* Map Button (Secondary) */
     .map-btn-square {
         flex: 1;
-        background: #f0f0f0; /* Light Gray */
+        background: #f0f0f0; 
         color: var(--text-primary);
         border: none;
         height: 60px;
@@ -559,7 +549,6 @@
         color: var(--text-secondary);
     }
 
-    /* General interactions */
     button:active {
         transform: scale(0.95);
     }

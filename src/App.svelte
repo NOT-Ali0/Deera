@@ -14,8 +14,8 @@
   let isCheckingAuth = true;
 
   onMount(() => {
-    // Check authentication status
-    RemoveToken();
+    // Check authntication
+    // RemoveToken();
     checkAuthentication();
   });
 
@@ -76,13 +76,13 @@
 
 <main>
   {#if isCheckingAuth}
-    <!-- Loading state while checking authentication -->
+    <!--loading checking authentication -->
     <div class="loading-container">
       <div class="spinner"></div>
       <p>جاري التحميل...</p>
     </div>
   {:else if !isAuthenticated}
-    <!-- Show login view if not authenticated -->
+    <!-- Show login if not authenticated -->
     <div in:fade={{ duration: 300 }}>
       <LoginView onloginSuccess={handleLoginSuccess} />
     </div>
