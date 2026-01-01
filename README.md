@@ -1,43 +1,57 @@
-# Svelte + Vite
+📦 Merchant Mini Program
+A modern, high-performance Mini Program built with a focus on simplicity and local usability. This application serves as a product management and shopping platform, featuring a clean user interface and localized features for the Iraqi market.
 
-This template should help get you started developing with Svelte in Vite.
+🚀 Key Features
+Svelte 5 Powered: Built using the latest Svelte 5 (Runes) for highly reactive and lightweight UI performance.
 
-## Recommended IDE Setup
+18 Governorates Integration: Built-in support for all Iraqi Governorates, allowing sellers to specify their location for better logistics.
 
-[VS Code](https://code.visualstudio.com/) + [Svelte](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode).
+Conditional Rendering Navigation: A fast, Single Page Application (SPA) feel using conditional rendering for seamless transitions between Home and Product views.
 
-## Need an official Svelte framework?
+Localized Pricing: Automatic formatting for Iraqi Dinar (IQD) with thousand separators (e.g., 25,000 د.ع).
 
-Check out [SvelteKit](https://github.com/sveltejs/kit#readme), which is also powered by Vite. Deploy anywhere with its serverless-first approach and adapt to various platforms, with out of the box support for TypeScript, SCSS, and Less, and easily-added support for mdsvex, GraphQL, PostCSS, Tailwind CSS, and more.
+Smart Clipboard Integration: Instead of complex external redirects, the app allows users to copy the Google Maps location directly to their clipboard for easy sharing and navigation.
 
-## Technical considerations
+Minimalist UI:
 
-**Why use this over SvelteKit?**
+Clean product cards with subtle location labels.
 
-- It brings its own routing solution which might not be preferable for some users.
-- It is first and foremost a framework that just happens to use Vite under the hood, not a Vite app.
+Simplified image navigation within the product details.
 
-This template contains as little as possible to get started with Vite + Svelte, while taking into account the developer experience with regards to HMR and intellisense. It demonstrates capabilities on par with the other `create-vite` templates and is a good starting point for beginners dipping their toes into a Vite + Svelte project.
+Custom manual "Back" navigation for a smooth user flow.
 
-Should you later need the extended capabilities and extensibility provided by SvelteKit, the template has been structured similarly to SvelteKit so that it is easy to migrate.
+🛠️ Tech Stack
+Framework: Svelte 5
 
-**Why include `.vscode/extensions.json`?**
+Environment: Mini Program Webview
 
-Other templates indirectly recommend extensions via the README, but this file allows VS Code to prompt the user to install the recommended extension upon opening the project.
+Styling: Modern CSS3 (Flexbox, Grid, and Backdrop-filter effects)
 
-**Why enable `checkJs` in the JS template?**
+State Management: Svelte Runes ($state, $props)
+------------------------------------------------------------------------------
+📂 Project Structure
+Plaintext
 
-It is likely that most cases of changing variable types in runtime are likely to be accidental, rather than deliberate. This provides advanced typechecking out of the box. Should you like to take advantage of the dynamically-typed nature of JavaScript, it is trivial to change the configuration.
+├── src
+│   ├── components       # Reusable UI components (ProductCard, Navbar, etc.)
+│   ├── pages            # Conditional views (Home, ProductDetail, AddProduct)
+│   └── App.svelte       # Main logic, State management & Conditional Router
+├── public               # Static assets (Icons, Images)
+└── package.json         # Project dependencies
 
-**Why is HMR not preserving my local component state?**
 
-HMR state preservation comes with a number of gotchas! It has been disabled by default in both `svelte-hmr` and `@sveltejs/vite-plugin-svelte` due to its often surprising behavior. You can read the details [here](https://github.com/sveltejs/svelte-hmr/tree/master/packages/svelte-hmr#preservation-of-local-state).
+------------------------------------------------------------------------------
+📝 Key Logic Implementation
+Price Formatting
+The app uses a clean utility to ensure all prices are readable and localized:
 
-If you have state that's important to retain within a component, consider creating an external store which would not be replaced by HMR.
+JavaScript
 
-```js
-// store.js
-// An extremely simple external store
-import { writable } from 'svelte/store'
-export default writable(0)
-```
+// Example: 50000 -> 50,000 د.ع
+const formatPrice = (amount) => new Intl.NumberFormat('en-US').format(amount) + " د.ع";
+Location Handling
+Each product is tagged with one of the 18 Iraqi Governorates, displayed clearly under the price to help buyers identify the seller's location instantly.
+
+
+
+------------------------------------------------------------------------------
