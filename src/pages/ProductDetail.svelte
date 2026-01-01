@@ -82,7 +82,7 @@
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                Authorization: `${$UserToken.token}`,
+                Authorization: `${localStorage.getItem("token")}`,
             },
         })
             .then((res) => res.json())

@@ -52,9 +52,7 @@
                     })
                         .then((res) => res.json())
                         .then((data) => {
-                            UserToken.set({
-                                token: data.token,
-                            });
+                            localStorage.setItem("token", data.token);
                         })
                         .catch((err) => {
                             my.alert({
