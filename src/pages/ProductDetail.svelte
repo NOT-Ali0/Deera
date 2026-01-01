@@ -120,10 +120,18 @@
                 title: "حذف المنتج",
                 content: "هل أنت متأكد من رغبتك في حذف هذا المنتج نهائياً؟",
                 confirmButtonText: "نعم، احذف",
-                // cancelButtonText: "إلغاء",
-                success: () => {
-                    my.vibrate();
-                    performDelete();
+                cancelButtonText: "إلغاء",
+                success: (res) => {
+                    if (res.confirm) {
+                        my.vibrate();
+                        performDelete();
+                    }
+                },
+                fail: () => {
+                    qi.showToast({
+                        content: "فشل في إظهار نافذة التأكيد",
+                        type: "none",
+                    });
                 },
             });
         }
@@ -168,16 +176,16 @@
 
     <!-- Image Swiper -->
     <div class="swiper-container">
-            {#each displayImages as img, i}
-                <!-- svelte-ignore a11y_click_events_have_key_events -->
-                <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
-                <img
-                    src={img}
-                    alt={product.name}
-                    class="slide-image"
-                    onclick={() => handlePreview(i)}
-                />
-            {/each}
+        {#each displayImages as img, i}
+            <!-- svelte-ignore a11y_click_events_have_key_events -->
+            <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
+            <img
+                src={img}
+                alt={product.name}
+                class="slide-image"
+                onclick={() => handlePreview(i)}
+            />
+        {/each}
         <!-- <div class="badge">{displayImages.length} Photos</div> -->
     </div>
 
