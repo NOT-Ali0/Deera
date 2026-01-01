@@ -1,6 +1,7 @@
 <script>
     import { createEventDispatcher, onMount } from "svelte";
     import { qi } from "../lib/qi.js";
+    import { formatNumber, CURRENCY_SYMBOL } from "../lib/utils.js";
     const dispatch = createEventDispatcher();
 
     // Prop from App.svelte
@@ -64,7 +65,7 @@
                             qi.makePhoneCall({ number: phoneNumber });
                         },
                     });
-                } 
+                }
                 // else if (index === 1) {
                 //     qi.vibrateShort();
                 //     qi.showToast({
@@ -183,7 +184,18 @@
             <span class="category-tag">{product.category || "General"}</span>
         </div>
 
-        <p class="price">{product.price}</p>
+        <div class="price-container">
+            {#if product.oldPrice && parseFloat(product.oldPrice) > parseFloat(product.price)}
+                <span class="old-price">
+                    {formatNumber(product.oldPrice)}
+                    <small>{CURRENCY_SYMBOL}</small>
+                </span>
+            {/if}
+            <p class="price">
+                {formatNumber(product.price)}
+                <span class="currency">{CURRENCY_SYMBOL}</span>
+            </p>
+        </div>
 
         {#if product.description}
             <p class="description">{product.description}</p>
@@ -351,11 +363,31 @@
         white-space: nowrap;
     }
 
-    .price {
-        font-size: 1.7rem;
-        font-weight: 800;
-        color: var(--success-color);
+    .price-container {
+        display: flex;
+        align-items: baseline;
+        gap: var(--spacing-sm);
         margin-bottom: var(--spacing-lg);
+    }
+
+    .price {
+        font-size: 1.8rem;
+        font-weight: 800;
+        color: #27ae60;
+        margin: 0;
+    }
+
+    .currency {
+        font-size: 1rem;
+        font-weight: 700;
+        margin-left: 2px;
+    }
+
+    .old-price {
+        font-size: 1.1rem;
+        color: var(--text-muted);
+        text-decoration: line-through;
+        font-weight: 500;
     }
 
     .description {

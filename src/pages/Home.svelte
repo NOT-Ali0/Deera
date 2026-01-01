@@ -1,6 +1,7 @@
 <script>
   import { onMount, createEventDispatcher } from "svelte";
   import { qi } from "../lib/qi.js";
+  import { formatNumber, CURRENCY_SYMBOL } from "../lib/utils.js";
 
   const dispatch = createEventDispatcher();
 
@@ -43,7 +44,6 @@
     dispatch("add");
   }
 
-
   function goToDetail(product) {
     dispatch("viewDetail", product);
   }
@@ -68,7 +68,15 @@
             <img src={product.image} alt={product.name} />
             <div class="info">
               <h3>{product.name}</h3>
-              <p class="price">{product.price}</p>
+              <div class="price-chip">
+                {#if product.oldPrice && parseFloat(product.oldPrice) > parseFloat(product.price)}
+                  <span class="old-price">{formatNumber(product.oldPrice)}</span
+                  >
+                {/if}
+                <span class="price">
+                  {formatNumber(product.price)} <small>{CURRENCY_SYMBOL}</small>
+                </span>
+              </div>
             </div>
           </div>
         {/each}
@@ -135,11 +143,34 @@
     -webkit-box-orient: vertical;
   }
 
+  .price-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #e9f7ef; /* Light green background */
+    padding: 4px 10px;
+    border-radius: 8px;
+    margin-top: 4px;
+  }
+
   .info .price {
     margin: 0;
+    font-weight: 800;
+    font-size: 1rem;
+    color: #27ae60;
+  }
+
+  .info .price small {
+    font-size: 0.7rem;
     font-weight: 700;
-    font-size: 1.1rem;
-    color: var(--success-color);
+    opacity: 0.8;
+  }
+
+  .old-price {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    text-decoration: line-through;
+    font-weight: 500;
   }
 
   .post-ad-btn {

@@ -10,6 +10,7 @@
     // Form Data
     let name = "";
     let price = "";
+    let oldPrice = ""; // For discounts
     let description = "";
     let category = "Select Category";
     let images = [];
@@ -85,24 +86,24 @@
     }
 
     function chooseVideoNative() {
-        // qi.showToast({ content: "Coming soon...", type: "none" });
-            my.chooseVideo({
-                sourceType: ["album", "camera"],
-                compressed: true,
-                maxDuration: 60,
-                camera: "back",
-                success: (res) => {
-                    video = res.tempFilePath;
-                    qi.hideLoading();
-                },
-                fail: (err) => {
-                    qi.hideLoading();
-                    my.alert({
-                        title: "Selection Failed",
-                        content: JSON.stringify(err),
-                    });
-                },
-            });
+        qi.showToast({ content: "Coming soon...", type: "none" });
+        my.chooseVideo({
+            sourceType: ["album", "camera"],
+            compressed: true,
+            maxDuration: 60,
+            camera: "back",
+            success: (res) => {
+                video = res.tempFilePath;
+                qi.hideLoading();
+            },
+            fail: (err) => {
+                qi.hideLoading();
+                my.alert({
+                    title: "Selection Failed",
+                    content: JSON.stringify(err),
+                });
+            },
+        });
     }
 
     function handleRemoveVideo() {
@@ -117,17 +118,18 @@
 
         qi.showLoading({ content: "Publishing..." });
 
-        // Get Location 
+        // Get Location
         qi.getLocation({
             success: (location) => {
                 const newProduct = {
                     id: Date.now(),
                     name,
                     price,
+                    oldPrice,
                     description,
                     category,
                     images, // Array of paths
-                    image: images.length > 0 ? images[0] : "", 
+                    image: images.length > 0 ? images[0] : "",
                     video,
                     lat: location.latitude,
                     lng: location.longitude,
@@ -184,13 +186,35 @@
     <h2>Add Post</h2>
 
     <div class="form-group">
-        <label>Product Name</label>
-        <input type="text" bind:value={name} placeholder="e.g. iPhone 14 Pro" />
+        <label for="product-name">Product Name</label>
+        <input
+            id="product-name"
+            type="text"
+            bind:value={name}
+            placeholder="e.g. iPhone 14 Pro"
+        />
     </div>
 
     <div class="form-group">
-        <label>Price</label>
-        <input type="text" bind:value={price} placeholder="e.g. 3500 QAR" />
+        <label for="sale-price">Sale Price (Price to pay)</label>
+        <input
+            id="sale-price"
+            type="number"
+            bind:value={price}
+            placeholder="e.g. 25000"
+        />
+    </div>
+
+    <div class="form-group">
+        <label for="original-price"
+            >Original Price (Optional for discount)</label
+        >
+        <input
+            id="original-price"
+            type="number"
+            bind:value={oldPrice}
+            placeholder="e.g. 30000"
+        />
     </div>
 
     <div class="form-group">
@@ -201,8 +225,9 @@
     </div>
 
     <div class="form-group">
-        <label>Description</label>
+        <label for="description">Description</label>
         <textarea
+            id="description"
             bind:value={description}
             rows="4"
             placeholder="Describe your item..."
