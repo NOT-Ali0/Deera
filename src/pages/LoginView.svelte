@@ -3,10 +3,8 @@
     import { fade } from "svelte/transition";
     import { qi } from "../lib/qi.js";
 
-    // Svelte 5 Props
     let { onloginSuccess } = $props();
 
-    // Svelte 5 State
     let fullName = $state("");
     let phoneNumber = $state("");
     let isLoading = $state(false);
@@ -27,7 +25,6 @@
             return;
         }
 
-        // Validate phone number format (basic check for Iraq numbers)
         if (phoneNumber.length !== 11 || !phoneNumber.startsWith("07")) {
             qi.showToast({
                 content: "يرجى إدخال رقم هاتف صحيح (11 رقم يبدأ بـ 07)",

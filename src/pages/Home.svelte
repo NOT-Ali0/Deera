@@ -3,17 +3,14 @@
   import { qi } from "../lib/qi.js";
   import { formatNumber, CURRENCY_SYMBOL } from "../lib/utils.js";
 
-  // Svelte 5 Props
   let { onviewDetail, onadd, userToken = null } = $props();
 
-  // Svelte 5 State
   let products = $state([]);
   let isRefreshing = $state(false);
 
   onMount(() => {
     qi.setNavigationBar({
       title: "Deera",
-      // backgroundColor: "#ffffff",
     });
     loadProducts();
   });

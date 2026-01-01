@@ -1,11 +1,7 @@
 <script>
     import { qi } from "../lib/qi.js";
-    // import {chooseVideo} from "hylid-bridge"
-
-    // Svelte 5 Props
     let { userToken = null, onsuccess, oncancel } = $props();
 
-    // Svelte 5 State
     let name = $state("");
     let price = $state("");
     let description = $state("");
@@ -56,7 +52,6 @@
 
     function handleAddImages() {
         if (typeof my === "undefined") {
-            // Mock environment - proceed directly
             qi.chooseImage({
                 count: 5 - images.length,
                 success: (res) => {
@@ -201,7 +196,7 @@
                         // Delay to show toast then navigate
                         setTimeout(() => {
                             if (onsuccess) onsuccess();
-                        }, 1000);
+                        }, 500);
                     },
                 });
             },

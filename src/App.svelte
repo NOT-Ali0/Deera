@@ -15,7 +15,7 @@
 
   onMount(() => {
     // Check authentication status
-    // RemoveToken();
+    RemoveToken();
     checkAuthentication();
   });
 
