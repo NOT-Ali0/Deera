@@ -17,13 +17,8 @@
     // Check authentication status
     // RemoveToken();
     checkAuthentication();
-
-    if (typeof my !== "undefined") {
-      if (my.canIUse && my.canIUse("hideBackHome")) {
-        my.hideBackHome();
-      }
-    }
   });
+  
   let RemoveToken = () => {
     my.removeStorage({
       key: "userToken",
@@ -60,23 +55,18 @@
   function handleNavigateToDetail(event) {
     selectedProduct = event.detail;
     currentPage = "detail";
-    if (typeof my !== "undefined") {
-      my.vibrateShort();
-    }
+    
   }
 
   function handleNavigateBack() {
     currentPage = "home";
     selectedProduct = null;
-    if (typeof my !== "undefined") {
-    }
+    
   }
 
   function handleAddProduct() {
     currentPage = "add-product";
-    if (typeof my !== "undefined") {
-      my.vibrateShort();
-    }
+    
   }
 
   function handleSaveSuccess() {
