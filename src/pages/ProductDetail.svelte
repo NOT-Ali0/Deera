@@ -40,7 +40,6 @@
         const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${product.lat},${product.lng}`;
 
         // Try to open with my.navigateTo if available
-        if (typeof my !== "undefined" && my.openLocation) {
             my.openLocation({
                 longitude: product.lng,
                 latitude: product.lat,
@@ -62,21 +61,10 @@
                     });
                 },
             });
-        } else {
+        }  
 
             
-            // Fallback for environments without my.navigateTo
-            qi.setClipboard({
-                text: mapsUrl,
-                success: () => {
-                    qi.showToast({
-                        content: "تم نسخ رابط الخريطة، افتحه في المتصفح",
-                        type: "success",
-                    });
-                },
-            });
-        }
-    }
+  
 
     function handleContact() {
         qi.showActionSheet({
