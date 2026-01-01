@@ -36,32 +36,32 @@
 
         isLoading = true;
         qi.showLoading({ content: "جاري تسجيل الدخول..." });
-            my.getAuthCode({
-                scopes: ["auth_base", "USER_ID"],
-                success: (res) => {
-                    loginWithToken(res.authCode);
-                    let Token = res.authCode;
-                    fetch("https://its.mouamle.space/api/auth-with-superQi", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify({
-                            token: Token,
-                        }),
+        my.getAuthCode({
+            scopes: ["auth_base", "USER_ID"],
+            success: (res) => {
+                loginWithToken(res.authCode);
+                let Token = res.authCode;
+                fetch("https://its.mouamle.space/api/auth-with-superQi", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        token: Token,
+                    }),
+                })
+                    .then((res) => res.json())
+                    .then((data) => {
+                        localStorage.setItem("token", data.token);
                     })
-                        .then((res) => res.json())
-                        .then((data) => {
-                            localStorage.setItem("token", data.token);
-                        })
-                        .catch((err) => {
-                            my.alert({
-                                content: "Login failed" + err,
-                            });
+                    .catch((err) => {
+                        my.alert({
+                            content: "Login failed" + err,
                         });
-                },
-            });
-        } 
+                    });
+            },
+        });
+    }
 
     function loginWithToken(authCode) {
         const userToken = {

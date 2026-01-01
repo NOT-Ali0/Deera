@@ -38,15 +38,39 @@
 
         // Construct Google Maps URL
         const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${product.lat},${product.lng}`;
-            qi.setClipboard({
-                text: mapsUrl,
-                success: () => {
-                    qi.showToast({
-                        content: "تم نسخ رابط الخريطة، افتحه في المتصفح",
-                        type: "success",
-                    });
-                },
-            });
+
+        my.navigateExternal({
+            url: mapsUrl,
+            success: () => {
+                my.alert({
+                    title: "تم فتح الخريطة بنجاح",
+                    content: "تم فتح الخريطة بنجاح",
+                });
+            },
+            fail: (err) => {
+                // في حال فشل الفتح المباشر، نرجع لخيار النسخ كخطة بديلة
+                my.setClipboard({
+                    text: mapsUrl,
+                    success: () => {
+                        my.showToast({
+                            content: "تعذر الفتح، تم نسخ الرابط بدلاً من ذلك",
+                            type: "none",
+                        });
+                    },
+                });
+                console.error("فشل فتح الرابط الخارجي:", err);
+            },
+        });
+
+        // qi.setClipboard({
+        //     text: mapsUrl,
+        //     success: () => {
+        //         qi.showToast({
+        //             content: "تم نسخ رابط الخريطة، افتحه في المتصفح",
+        //             type: "success",
+        //         });
+        //     },
+        // });
     }
 
     function handleContact() {
