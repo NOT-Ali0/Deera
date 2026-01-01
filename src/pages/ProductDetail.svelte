@@ -19,20 +19,6 @@
         });
     });
 
-    function handleBack() {
-        dispatch("back");
-    }
-
-    function handleShare() {
-        const shareText = `Check out this ${product.name} for ${product.price}!`;
-        qi.setClipboard({
-            text: shareText,
-            success: () => {
-                qi.showToast({ content: "Link copied!", type: "success" });
-            },
-        });
-    }
-
     function handlePreview(index) {
         qi.previewImage({
             urls: displayImages,
@@ -54,9 +40,12 @@
         const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${product.lat},${product.lng}`;
 
         // Try to open with my.navigateTo if available
-        if (typeof my !== "undefined" && my.navigateTo) {
-            my.navigateTo({
-                url: mapsUrl,
+        if (typeof my !== "undefined" && my.openLocation) {
+            my.openLocation({
+                longitude: product.lng,
+                latitude: product.lat,
+                name: "Iraq",
+                address: "",
                 success: () => {
                     qi.vibrateShort();
                 },
@@ -74,6 +63,8 @@
                 },
             });
         } else {
+
+            
             // Fallback for environments without my.navigateTo
             qi.setClipboard({
                 text: mapsUrl,
