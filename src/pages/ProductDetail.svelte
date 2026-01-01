@@ -1,20 +1,17 @@
 <script>
-    import { onMount, flush } from "svelte";
+    import { createEventDispatcher, onMount } from "svelte";
     import { qi } from "../lib/qi.js";
     import { formatNumber, CURRENCY_SYMBOL } from "../lib/utils.js";
+    const dispatch = createEventDispatcher();
 
-    // Svelte 5 Props
-    let { product = {}, onback } = $props();
+    // Prop from App.svelte
+    export let product = {};
 
-    // Svelte 5 State
-    let currentImageIndex = $state(0);
-
-    // Svelte 5 Derived State
-    let displayImages = $derived(
+    // Computed
+    $: displayImages =
         product.images && product.images.length > 0
             ? product.images
-            : [product.image || "https://placehold.co/300"],
-    );
+            : [product.image || "https://placehold.co/300"];
 
     onMount(() => {
         qi.setNavigationBar({
@@ -23,7 +20,7 @@
     });
 
     function closeDetail() {
-        if (onback) onback();
+        dispatch("back");
     }
 
     function handlePreview(index) {
@@ -31,16 +28,6 @@
             urls: displayImages,
             current: index,
         });
-    }
-
-    function handleScroll(e) {
-        const { scrollLeft, clientWidth } = e.currentTarget;
-        // Calculate index based on scroll position (RTL check: Iraqi context usually RTL, but browser scrollLeft varies)
-        // For simplicity, we use the absolute value or normal direction assuming LTR container logic
-        const index = Math.round(scrollLeft / clientWidth);
-        if (currentImageIndex !== index) {
-            currentImageIndex = index;
-        }
     }
 
     function handleOpenMap() {
@@ -79,6 +66,13 @@
                         },
                     });
                 }
+                // else if (index === 1) {
+                //     qi.vibrateShort();
+                //     qi.showToast({
+                //         content: "Added to Favorites",
+                //         type: "success",
+                //     });
+                // }
             },
         });
     }
@@ -147,7 +141,7 @@
                             type: "success",
                         });
                         setTimeout(() => {
-                            if (onback) onback();
+                            dispatch("back");
                         }, 500);
                     },
                     fail: (err) => {
@@ -163,39 +157,25 @@
 </script>
 
 <div class="container">
-    <!-- Manual Back Button (Floating style for minimalist look) -->
-    <button class="manual-back-btn" onclick={closeDetail} aria-label="Back">
+    <!-- Manual Back Button -->
+    <button class="manual-back-btn" onclick={closeDetail}>
         <span class="icon">←</span>
+        <span class="text">رجوع</span>
     </button>
 
-    <!-- Refactored Image Slider -->
-    <div class="gallery-wrapper">
-        <div class="swiper-container" onscroll={handleScroll}>
-            {#each displayImages as img, i}
-                <!-- svelte-ignore a11y_click_events_have_key_events -->
-                <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
-                <img
-                    src={img}
-                    alt={product.name}
-                    class="slide-image"
-                    onclick={() => handlePreview(i)}
-                />
-            {/each}
-        </div>
-
-        <!-- Dots and Gradient Overlay -->
-        <div class="gallery-overlay">
-            {#if displayImages.length > 1}
-                <div class="pagination-dots">
-                    {#each displayImages as _, i}
-                        <div
-                            class="dot"
-                            class:active={currentImageIndex === i}
-                        ></div>
-                    {/each}
-                </div>
-            {/if}
-        </div>
+    <!-- Image Swiper -->
+    <div class="swiper-container">
+        {#each displayImages as img, i}
+            <!-- svelte-ignore a11y_click_events_have_key_events -->
+            <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
+            <img
+                src={img}
+                alt={product.name}
+                class="slide-image"
+                onclick={() => handlePreview(i)}
+            />
+        {/each}
+        <!-- <div class="badge">{displayImages.length} Photos</div> -->
     </div>
 
     <div class="content">
@@ -267,59 +247,59 @@
         display: flex;
         flex-direction: column;
         position: relative;
-        padding-bottom: 110px; /* Space for fixed bottom bar */
+        padding-bottom: 100px; /* Space for fixed bottom bar */
     }
 
-    /* Minimal Floating Back Button */
+    /* Manual Back Button */
     .manual-back-btn {
         position: absolute;
-        top: 20px;
-        left: 20px;
+        top: 16px;
+        left: 16px;
         z-index: 100;
-        background: rgba(255, 255, 255, 0.7);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        width: 44px;
-        height: 44px;
-        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        border: none;
+        padding: 8px 16px;
+        border-radius: 100px;
         display: flex;
         align-items: center;
-        justify-content: center;
+        gap: 8px;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        cursor: pointer;
         transition: transform 0.2s ease;
     }
 
     .manual-back-btn:active {
-        transform: scale(0.9);
+        transform: scale(0.95);
+        background: rgba(255, 255, 255, 0.95);
     }
 
     .manual-back-btn .icon {
-        font-size: 1.4rem;
-        font-weight: bold;
+        font-size: 1.2rem;
+        line-height: 1;
+        color: var(--text-primary);
+        margin-top: -2px; /* Visual tweak */
+    }
+
+    .manual-back-btn .text {
+        font-size: 0.95rem;
+        font-weight: 700;
         color: var(--text-primary);
     }
 
-    /* Gallery Styles */
-    .gallery-wrapper {
-        position: relative;
-        width: 100%;
-        aspect-ratio: 1 / 1; /* Fixed 1:1 Aspect Ratio */
-        overflow: hidden;
-    }
-
+    /* Swiper Styles */
     .swiper-container {
         width: 100%;
-        height: 100%;
+        height: 380px;
+        background: var(--background);
         display: flex;
         overflow-x: auto;
         scroll-snap-type: x mandatory;
-        scrollbar-width: none; /* Hide scrollbar for Firefox */
+        position: relative;
     }
 
     .swiper-container::-webkit-scrollbar {
-        display: none; /* Hide scrollbar for Chrome/Safari */
+        display: none;
     }
 
     .slide-image {
@@ -330,53 +310,27 @@
         scroll-snap-align: start;
     }
 
-    /* Overlay with Bottom Gradient and Dots */
-    .gallery-overlay {
+    .badge {
         position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        height: 80px;
-        background: linear-gradient(to top, rgba(0, 0, 0, 0.4), transparent);
-        display: flex;
-        align-items: flex-end;
-        justify-content: center;
-        padding-bottom: 24px;
-        pointer-events: none; /* Let clicks pass through to images */
+        bottom: 30px;
+        right: var(--spacing-md);
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(8px);
+        color: white;
+        padding: 6px 14px;
+        border-radius: 12px;
+        font-size: 0.85rem;
+        font-weight: 600;
         z-index: 6;
-    }
-
-    .pagination-dots {
-        display: flex;
-        gap: 8px;
-        background: rgba(0, 0, 0, 0.2);
-        padding: 6px 10px;
-        border-radius: 20px;
-        backdrop-filter: blur(4px);
-    }
-
-    .dot {
-        width: 6px;
-        height: 6px;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.4);
-        transition: all 0.2s ease;
-    }
-
-    .dot.active {
-        background: #fff;
-        transform: scale(1.2);
-        width: 12px;
-        border-radius: 10px; /* Pill shape for active dot */
     }
 
     .content {
         padding: var(--spacing-lg);
         flex: 1;
-        border-top-left-radius: 28px;
-        border-top-right-radius: 28px;
+        border-top-left-radius: 24px;
+        border-top-right-radius: 24px;
         background: var(--surface);
-        margin-top: -30px; /* Slight pull up */
+        margin-top: -24px;
         position: relative;
         box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.05);
         z-index: 5;
@@ -472,7 +426,7 @@
     .contact-btn,
     .delete-btn {
         width: 100%;
-        padding: 18px;
+        padding: 16px;
         border-radius: 16px;
         font-weight: 700;
         font-size: 1rem;
@@ -504,8 +458,8 @@
         right: 0;
         max-width: 600px;
         margin: 0 auto;
-        padding: 16px 20px 32px 20px;
-        background: rgba(255, 255, 255, 0.75);
+        padding: 16px 20px 30px 20px; /* Extra bottom padding for safe area */
+        background: rgba(255, 255, 255, 0.7);
         backdrop-filter: blur(15px);
         -webkit-backdrop-filter: blur(15px);
         border-top: 1px solid rgba(0, 0, 0, 0.05);
@@ -516,6 +470,7 @@
         box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.08);
     }
 
+    /* Pay Button (Primary) */
     .pay-btn-primary {
         flex: 0 0 70%;
         background: linear-gradient(
@@ -528,7 +483,7 @@
         padding: 18px;
         font-size: 1.2rem;
         font-weight: 800;
-        border-radius: 18px;
+        border-radius: 16px;
         box-shadow: 0 8px 20px rgba(0, 123, 255, 0.3);
         cursor: pointer;
         transition: transform 0.2s;
@@ -538,13 +493,14 @@
         transform: scale(0.95);
     }
 
+    /* Map Button (Secondary) */
     .map-btn-square {
         flex: 1;
-        background: #f0f0f0;
+        background: #f0f0f0; /* Light Gray */
         color: var(--text-primary);
         border: none;
         height: 60px;
-        border-radius: 18px;
+        border-radius: 16px;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -571,6 +527,7 @@
         color: var(--text-secondary);
     }
 
+    /* General interactions */
     button:active {
         transform: scale(0.95);
     }
