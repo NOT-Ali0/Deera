@@ -18,7 +18,7 @@
     // RemoveToken();
     checkAuthentication();
   });
-  
+
   let RemoveToken = () => {
     my.removeStorage({
       key: "userToken",
@@ -49,24 +49,20 @@
   function handleLoginSuccess(event) {
     userToken = event.detail;
     isAuthenticated = true;
-    qi.vibrateShort();
   }
 
   function handleNavigateToDetail(event) {
     selectedProduct = event.detail;
     currentPage = "detail";
-    
   }
 
   function handleNavigateBack() {
     currentPage = "home";
     selectedProduct = null;
-    
   }
 
   function handleAddProduct() {
     currentPage = "add-product";
-    
   }
 
   function handleSaveSuccess() {
@@ -100,7 +96,7 @@
     </div>
   {:else if currentPage === "detail"}
     <div in:fade={{ duration: 300 }}>
-      <ProductDetail product={selectedProduct} on:back={handleNavigateBack} />
+      <ProductDetail product={selectedProduct} onback={handleNavigateBack} />
     </div>
   {:else if currentPage === "add-product"}
     <div in:fade={{ duration: 300 }}>

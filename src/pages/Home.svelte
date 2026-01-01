@@ -1,7 +1,6 @@
 <script>
   import { onMount, createEventDispatcher } from "svelte";
   import { qi } from "../lib/qi.js";
-  import { UserToken } from "../lib/UserInfo.js";
 
   const dispatch = createEventDispatcher();
 

@@ -2,7 +2,6 @@
     import { createEventDispatcher, onMount } from "svelte";
     import { fade } from "svelte/transition";
     import { qi } from "../lib/qi.js";
-    import { UserToken } from "../lib/UserInfo.js";
     const dispatch = createEventDispatcher();
 
     let fullName = "";

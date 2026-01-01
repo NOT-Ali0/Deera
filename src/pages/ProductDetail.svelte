@@ -1,27 +1,25 @@
 <script>
-    import { createEventDispatcher, onMount } from "svelte";
+    import { onMount } from "svelte";
     import { qi } from "../lib/qi.js";
-    import {hideBackHome} from 'hylid-bridge'
-    const dispatch = createEventDispatcher();
 
-    // Prop from App.svelte
-    export let product = {};
+    // Svelte 5 Props
+    let { product = {}, onback } = $props();
 
-    // Computed
-    $: displayImages =
+    // Svelte 5 Derived State
+    let displayImages = $derived(
         product.images && product.images.length > 0
             ? product.images
-            : [product.image || "https://placehold.co/300"];
+            : [product.image || "https://placehold.co/300"],
+    );
 
     onMount(() => {
         qi.setNavigationBar({
             title: "تفاصيل المنتج",
         });
-        hideBackHome()
     });
 
     function closeDetail() {
-        dispatch("back");
+        if (onback) onback();
     }
 
     function handlePreview(index) {
@@ -32,7 +30,6 @@
     }
 
     function handleOpenMap() {
-        // Check if location data is available
         if (!product.lat || !product.lng) {
             qi.showToast({
                 content: "الموقع غير متوفر",
@@ -41,7 +38,6 @@
             return;
         }
 
-        //  Google Maps URL
         const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${product.lat},${product.lng}`;
         qi.setClipboard({
             text: mapsUrl,
@@ -69,7 +65,6 @@
                         },
                     });
                 } else if (index === 1) {
-                    // Favorites
                     qi.vibrateShort();
                     qi.showToast({
                         content: "Added to Favorites",
@@ -81,6 +76,7 @@
     }
 
     function handlePay() {
+        qi.vibrateShort();
         fetch("https://its.mouamle.space/api/payment", {
             method: "POST",
             headers: {
@@ -113,6 +109,7 @@
                 });
             });
     }
+
     function handleDelete() {
         if (typeof my !== "undefined") {
             my.confirm({
@@ -143,7 +140,7 @@
                             type: "success",
                         });
                         setTimeout(() => {
-                            dispatch("back");
+                            if (onback) onback();
                         }, 500);
                     },
                     fail: (err) => {
@@ -159,10 +156,19 @@
 </script>
 
 <div class="container">
-    <!-- Manual Back Button -->
-    <button class="manual-back-btn" onclick={closeDetail}>
-        <span class="icon">←</span>
-        <span class="text">رجوع</span>
+    <!-- Navigation: Floating Back Button -->
+    <button class="back-btn-floating" onclick={closeDetail} aria-label="Back">
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"><path d="m15 18-6-6 6-6" /></svg
+        >
     </button>
 
     <!-- Image Swiper -->
@@ -205,19 +211,30 @@
             </div>
         {/if}
 
-        <div class="actions">
+        <!-- Secondary Actions in Content Area -->
+        <div class="secondary-actions">
             <button class="contact-btn" onclick={handleContact}>
-                Contact Seller
+                Contact Seller (تواصل مع البائع)
             </button>
-            <button class="map-btn" onclick={handleOpenMap}>
-                📍 عرض الموقع على الخريطة
-            </button>
-            <button class="pay-btn" onclick={handlePay}> Pay Now </button>
-            <button class="delete-full-width-btn" onclick={handleDelete}>
-                Delete Product
+            <button class="delete-btn" onclick={handleDelete}>
+                Delete Product (حذف المنتج)
             </button>
         </div>
     </div>
+
+    <!-- Fixed Bottom Bar -->
+    <footer class="bottom-bar">
+        <!-- Secondary Button: Map -->
+        <button class="map-btn-square" onclick={handleOpenMap} title="الموقع">
+            <span class="btn-icon">📍</span>
+            <span class="btn-text-short">الموقع</span>
+        </button>
+
+        <!-- Primary Button: Pay -->
+        <button class="pay-btn-primary" onclick={handlePay}>
+            الدفع الآن
+        </button>
+    </footer>
 </div>
 
 <style>
@@ -227,52 +244,39 @@
         display: flex;
         flex-direction: column;
         position: relative;
+        padding-bottom: 100px; /* Space for fixed bottom bar */
     }
 
-    /* Manual Back Button */
-    .manual-back-btn {
-        position: absolute;
-        top: 16px;
-        left: 16px;
-        z-index: 100;
-        background: rgba(255, 255, 255, 0.85);
-        backdrop-filter: blur(8px);
-        -webkit-backdrop-filter: blur(8px);
-        border: none;
-        padding: 8px 16px;
-        border-radius: 100px;
+    /* Floating Back Button */
+    .back-btn-floating {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
         display: flex;
         align-items: center;
-        gap: 8px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        justify-content: center;
+        z-index: 1010;
         cursor: pointer;
-        transition:
-            transform 0.2s ease,
-            background-color 0.2s;
+        color: var(--text-primary);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s ease;
     }
 
-    .manual-back-btn:active {
+    .back-btn-floating:active {
         transform: scale(0.95);
-        background: rgba(255, 255, 255, 0.95);
-    }
-
-    .manual-back-btn .icon {
-        font-size: 1.2rem;
-        line-height: 1;
-        color: var(--text-primary);
-        margin-top: -2px; /* Visual tweak */
-    }
-
-    .manual-back-btn .text {
-        font-size: 0.95rem;
-        font-weight: 700;
-        color: var(--text-primary);
     }
 
     /* Swiper Styles */
     .swiper-container {
         width: 100%;
-        height: 350px;
+        height: 380px;
         background: var(--background);
         display: flex;
         overflow-x: auto;
@@ -281,7 +285,7 @@
     }
 
     .swiper-container::-webkit-scrollbar {
-        display: none; /* Hide scrollbar */
+        display: none;
     }
 
     .slide-image {
@@ -294,26 +298,27 @@
 
     .badge {
         position: absolute;
-        bottom: var(--spacing-md);
+        bottom: 30px;
         right: var(--spacing-md);
         background: rgba(0, 0, 0, 0.6);
         backdrop-filter: blur(8px);
         color: white;
-        padding: 6px 12px;
-        border-radius: var(--radius-sm);
+        padding: 6px 14px;
+        border-radius: 12px;
         font-size: 0.85rem;
         font-weight: 600;
+        z-index: 6;
     }
 
     .content {
         padding: var(--spacing-lg);
         flex: 1;
-        border-top-left-radius: var(--radius-xl);
-        border-top-right-radius: var(--radius-xl);
+        border-top-left-radius: 24px;
+        border-top-right-radius: 24px;
         background: var(--surface);
         margin-top: -24px;
         position: relative;
-        box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
+        box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.05);
         z-index: 5;
     }
 
@@ -322,78 +327,118 @@
         justify-content: space-between;
         align-items: flex-start;
         gap: var(--spacing-md);
+        margin-bottom: var(--spacing-sm);
     }
 
     h1 {
         margin: 0;
-        font-size: 1.75rem;
-        font-weight: 700;
+        font-size: 1.8rem;
+        font-weight: 800;
         color: var(--text-primary);
         flex: 1;
-        line-height: 1.3;
+        line-height: 1.2;
     }
 
     .category-tag {
-        background: var(--success-light);
-        color: var(--success-color);
+        background: var(--primary-light);
+        color: var(--primary-color);
         padding: 6px 12px;
-        border-radius: var(--radius-sm);
+        border-radius: 12px;
         font-size: 0.8rem;
         font-weight: 700;
         white-space: nowrap;
     }
 
     .price {
-        font-size: 1.6rem;
+        font-size: 1.7rem;
         font-weight: 800;
         color: var(--success-color);
-        margin: var(--spacing-sm) 0 var(--spacing-md) 0;
+        margin-bottom: var(--spacing-lg);
     }
 
     .description {
         color: var(--text-secondary);
-        line-height: 1.6;
-        margin-bottom: var(--spacing-lg);
-        font-size: 1rem;
+        line-height: 1.7;
+        margin-bottom: var(--spacing-xl);
+        font-size: 1.05rem;
     }
 
     .video-section {
-        margin-top: var(--spacing-lg);
-        margin-bottom: var(--spacing-lg);
+        margin-bottom: var(--spacing-xl);
     }
 
     .video-section h3 {
         margin: 0 0 var(--spacing-md) 0;
-        font-size: 1.1rem;
+        font-size: 1.2rem;
         font-weight: 700;
-        color: var(--text-primary);
     }
 
     .video-player {
         width: 100%;
-        border-radius: var(--radius-md);
+        border-radius: 16px;
         background: #000;
-        max-height: 250px;
+        aspect-ratio: 16/9;
+        object-fit: cover;
     }
 
-    .actions {
+    /* Secondary Actions in Content */
+    .secondary-actions {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-md);
+        margin-top: var(--spacing-lg);
+    }
+
+    .contact-btn,
+    .delete-btn {
+        width: 100%;
+        padding: 16px;
+        border-radius: 16px;
+        font-weight: 700;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        border: none;
+    }
+
+    .contact-btn {
+        background: var(--primary-light);
+        color: var(--primary-color);
+    }
+
+    .delete-btn {
+        background: var(--danger-light);
+        color: var(--danger-color);
+    }
+
+    .contact-btn:active,
+    .delete-btn:active {
+        transform: scale(0.98);
+    }
+
+    /* Fixed Bottom Bar */
+    .bottom-bar {
         position: fixed;
         bottom: 0;
         left: 0;
         right: 0;
         max-width: 600px;
         margin: 0 auto;
-        padding: var(--spacing-md);
-        background: rgba(255, 255, 255, 0.9);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
+        padding: 16px 20px 30px 20px; /* Extra bottom padding for safe area */
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
         border-top: 1px solid rgba(0, 0, 0, 0.05);
-        box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
-        z-index: 100;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        z-index: 1000;
+        box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.08);
     }
 
-    .contact-btn {
-        width: 100%;
+    /* Pay Button (Primary) */
+    .pay-btn-primary {
+        flex: 0 0 70%;
         background: linear-gradient(
             135deg,
             var(--primary-color) 0%,
@@ -401,92 +446,55 @@
         );
         color: white;
         border: none;
-        padding: 16px;
-        font-size: 1.1rem;
-        font-weight: 700;
-        border-radius: var(--radius-md);
+        padding: 18px;
+        font-size: 1.2rem;
+        font-weight: 800;
+        border-radius: 16px;
+        box-shadow: 0 8px 20px rgba(0, 123, 255, 0.3);
         cursor: pointer;
-        transition: all var(--transition-normal);
-        box-shadow: var(--shadow-md);
-        letter-spacing: 0.3px;
+        transition: transform 0.2s;
     }
 
-    .contact-btn:hover {
-        box-shadow: var(--shadow-lg);
-        transform: translateY(-2px);
-    }
-
-    .contact-btn:active {
+    .pay-btn-primary:active {
         transform: scale(0.95);
     }
 
-    .map-btn {
-        width: 100%;
-        background: linear-gradient(135deg, #00897b 0%, #00695c 100%);
-        color: white;
+    /* Map Button (Secondary) */
+    .map-btn-square {
+        flex: 1;
+        background: #f0f0f0; /* Light Gray */
+        color: var(--text-primary);
         border: none;
-        padding: 16px;
-        font-size: 1.1rem;
-        font-weight: 700;
-        border-radius: var(--radius-md);
-        cursor: pointer;
-        transition: all var(--transition-normal);
-        box-shadow: var(--shadow-md);
-        letter-spacing: 0.3px;
-        margin-top: var(--spacing-md);
+        height: 60px;
+        border-radius: 16px;
         display: flex;
+        flex-direction: column;
         align-items: center;
         justify-content: center;
-        gap: var(--spacing-sm);
+        cursor: pointer;
+        transition:
+            transform 0.2s,
+            background-color 0.2s;
+        gap: 2px;
     }
 
-    .map-btn:hover {
-        box-shadow: var(--shadow-lg);
-        transform: translateY(-2px);
-    }
-
-    .map-btn:active {
+    .map-btn-square:active {
         transform: scale(0.95);
+        background-color: #e5e5e5;
     }
 
-    .pay-btn {
-        background-color: #28a745;
-        color: white;
-        text-align: center;
-        font-size: 16px;
-        padding: 14px;
-        border: none;
-        border-radius: 8px;
-        width: 100%;
-        cursor: pointer;
-        margin-top: 10px;
-        font-weight: bold;
-        transition: opacity 0.2s;
+    .btn-icon {
+        font-size: 1.4rem;
     }
 
-    .pay-btn:active {
-        opacity: 0.8;
-    }
-
-    .delete-full-width-btn {
-        width: 100%;
-        background: var(--danger-light);
-        color: var(--danger-color);
-        border: 1px solid rgba(211, 47, 47, 0.2);
-        padding: 16px;
-        font-size: 1.1rem;
+    .btn-text-short {
+        font-size: 0.75rem;
         font-weight: 700;
-        border-radius: var(--radius-md);
-        cursor: pointer;
-        transition: all var(--transition-normal);
-        margin-top: var(--spacing-md);
+        color: var(--text-secondary);
     }
 
-    .delete-full-width-btn:hover {
-        background: #ffcdd2;
-    }
-
-    .delete-full-width-btn:active {
+    /* General interactions */
+    button:active {
         transform: scale(0.95);
     }
 </style>
