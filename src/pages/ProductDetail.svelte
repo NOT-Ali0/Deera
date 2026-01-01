@@ -1,16 +1,16 @@
 <script>
-    import { onMount } from "svelte";
+    import { createEventDispatcher, onMount } from "svelte";
     import { qi } from "../lib/qi.js";
+    const dispatch = createEventDispatcher();
 
-    // Svelte 5 Props
-    let { product = {}, onback } = $props();
+    // Prop from App.svelte
+    export let product = {};
 
-    // Svelte 5 Derived State
-    let displayImages = $derived(
+    // Computed
+    $: displayImages =
         product.images && product.images.length > 0
             ? product.images
-            : [product.image || "https://placehold.co/300"],
-    );
+            : [product.image || "https://placehold.co/300"];
 
     onMount(() => {
         qi.setNavigationBar({
@@ -19,7 +19,7 @@
     });
 
     function closeDetail() {
-        if (onback) onback();
+        dispatch("back");
     }
 
     function handlePreview(index) {
@@ -76,7 +76,6 @@
     }
 
     function handlePay() {
-        qi.vibrateShort();
         fetch("https://its.mouamle.space/api/payment", {
             method: "POST",
             headers: {
@@ -140,7 +139,7 @@
                             type: "success",
                         });
                         setTimeout(() => {
-                            if (onback) onback();
+                            dispatch("back");
                         }, 500);
                     },
                     fail: (err) => {
@@ -156,19 +155,10 @@
 </script>
 
 <div class="container">
-    <!-- Navigation: Floating Back Button -->
-    <button class="back-btn-floating" onclick={closeDetail} aria-label="Back">
-        <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"><path d="m15 18-6-6 6-6" /></svg
-        >
+    <!-- Manual Back Button -->
+    <button class="manual-back-btn" onclick={closeDetail}>
+        <span class="icon">←</span>
+        <span class="text">رجوع</span>
     </button>
 
     <!-- Image Swiper -->
@@ -214,10 +204,10 @@
         <!-- Secondary Actions in Content Area -->
         <div class="secondary-actions">
             <button class="contact-btn" onclick={handleContact}>
-                Contact Seller (تواصل مع البائع)
+                تواصل مع البائع
             </button>
             <button class="delete-btn" onclick={handleDelete}>
-                Delete Product (حذف المنتج)
+                حذف المنتج
             </button>
         </div>
     </div>

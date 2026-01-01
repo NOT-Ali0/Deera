@@ -96,7 +96,7 @@
     </div>
   {:else if currentPage === "detail"}
     <div in:fade={{ duration: 300 }}>
-      <ProductDetail product={selectedProduct} onback={handleNavigateBack} />
+      <ProductDetail product={selectedProduct} on:back={handleNavigateBack} />
     </div>
   {:else if currentPage === "add-product"}
     <div in:fade={{ duration: 300 }}>
