@@ -52,7 +52,7 @@
 <div class="home-container">
 
   <header>
-    <h1>Neighbors Market</h1>
+    <h1>Deera Market</h1>
     <button class="refresh-btn" onclick={handleRefresh} disabled={isRefreshing}>
       ↻
     </button>
@@ -84,7 +84,7 @@
     </div>
   </main>
 
-  <button class="post-ad-btn" onclick={handlePostAd}> Post Ad </button>
+  <button class="post-ad-btn" onclick={handlePostAd}>Add Post</button>
 </div>
 
 <style>
