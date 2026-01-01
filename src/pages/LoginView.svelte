@@ -1,5 +1,5 @@
 <script>
-    import { createEventDispatcher } from "svelte";
+    import { createEventDispatcher, onMount } from "svelte";
     import { fade } from "svelte/transition";
     import { qi } from "../lib/qi.js";
     import { UserToken } from "../lib/UserInfo.js";
@@ -8,6 +8,12 @@
     let fullName = "";
     let phoneNumber = "";
     let isLoading = false;
+
+    onMount(() => {
+        qi.setNavigationBar({
+            title: "تسجيل الدخول",
+        });
+    });
 
     function handleSubmit() {
         // Validate inputs
@@ -50,8 +56,8 @@
                         .then((res) => res.json())
                         .then((data) => {
                             UserToken.set({
-                                token:data.token
-                            })
+                                token: data.token,
+                            });
                         })
                         .catch((err) => {
                             my.alert({
@@ -102,33 +108,9 @@
 <div class="login-page" in:fade={{ duration: 400 }}>
     <div class="login-card">
         <!-- Header Section -->
-        <header class="header">
-            <!-- <div class="logo-container">
-                <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="logo-svg"
-                >
-                    <path
-                        d="M3 9.5L12 4L21 9.5V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V9.5Z"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                    />
-                    <path
-                        d="M9 21V12H15V21"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                    />
-                </svg>
-            </div> -->
-            <h1>Deera</h1>
-            <p class="subtitle">سوقك المحلي بين يديك</p>
-        </header>
+        <!-- Header Section -->
+
+        <!-- Form Section -->
 
         <!-- Form Section -->
         <main class="form-container">
@@ -216,44 +198,6 @@
         display: flex;
         flex-direction: column;
         gap: var(--spacing-xl, 32px);
-    }
-
-    .header {
-        text-align: center;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: var(--spacing-sm, 8px);
-    }
-
-    .logo-container {
-        width: 64px;
-        height: 64px;
-        background-color: var(--primary-light, #e7f3ff);
-        color: var(--primary-color, #007bff);
-        border-radius: 16px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-bottom: var(--spacing-sm, 8px);
-    }
-
-    .logo-svg {
-        width: 32px;
-        height: 32px;
-    }
-
-    .header h1 {
-        font-size: 1.5rem;
-        font-weight: 800;
-        margin: 0;
-        color: var(--text-primary, #1a1a1a);
-    }
-
-    .subtitle {
-        font-size: 0.95rem;
-        color: var(--text-secondary, #666);
-        margin: 0;
     }
 
     .form-container {

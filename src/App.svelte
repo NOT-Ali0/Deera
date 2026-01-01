@@ -20,13 +20,12 @@
 
     // Initial setup if needed
     if (typeof my !== "undefined") {
-      if (my.canIUse("hideBackHome")) {
+      if (my.canIUse && my.canIUse("hideBackHome")) {
         my.hideBackHome();
       }
-      // my.setNavigationBar({ title: "سوق الجيران" });
     }
   });
-  let RemoveToken = ()=>{
+  let RemoveToken = () => {
     my.removeStorage({
       key: "userToken",
       success: () => {
@@ -35,7 +34,7 @@
         currentPage = "home";
       },
     });
-  }
+  };
 
   function checkAuthentication() {
     qi.getStorage({
@@ -64,7 +63,6 @@
     currentPage = "detail";
     if (typeof my !== "undefined") {
       my.vibrateShort();
-      // my.setNavigationBar({ title: "تفاصيل المنتج" });
     }
   }
 
@@ -72,7 +70,6 @@
     currentPage = "home";
     selectedProduct = null;
     if (typeof my !== "undefined") {
-      // my.setNavigationBar({ title: "سوق الجيران" });
     }
   }
 
@@ -80,7 +77,6 @@
     currentPage = "add-product";
     if (typeof my !== "undefined") {
       my.vibrateShort();
-      // my.setNavigationBar({ title: "Post New Ad" });
     }
   }
 

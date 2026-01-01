@@ -1,5 +1,5 @@
 <script>
-    import { createEventDispatcher } from "svelte";
+    import { createEventDispatcher, onMount } from "svelte";
     import { qi } from "../lib/qi.js";
     import { UserToken } from "../lib/UserInfo.js";
     const dispatch = createEventDispatcher();
@@ -12,6 +12,12 @@
         product.images && product.images.length > 0
             ? product.images
             : [product.image || "https://placehold.co/300"];
+
+    onMount(() => {
+        qi.setNavigationBar({
+            title: "تفاصيل المنتج",
+        });
+    });
 
     function handleBack() {
         dispatch("back");
@@ -117,8 +123,8 @@
                 Authorization: `${$UserToken.token}`,
             },
         })
-        .then((res) => res.json())
-        .then((data) => {
+            .then((res) => res.json())
+            .then((data) => {
                 my.tradePay({
                     paymentUrl: data.url,
                     success: (res) => {
@@ -129,7 +135,8 @@
                     },
                     fail: (err) => {
                         qi.showToast({
-                            content: "Payment failed trade" + JSON.stringify(err),
+                            content:
+                                "Payment failed trade" + JSON.stringify(err),
                             type: "none",
                         });
                     },
@@ -187,11 +194,6 @@
 </script>
 
 <div class="container">
-    <div class="header">
-        <button class="back-btn" onclick={handleBack}>←</button>
-        <button class="share-btn" onclick={handleShare}>🔗</button>
-    </div>
-
     <!-- Image Swiper -->
     <div class="swiper-container">
         {#each displayImages as img, i}
@@ -253,47 +255,6 @@
         min-height: 100vh;
         display: flex;
         flex-direction: column;
-    }
-
-    .header {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        padding: var(--spacing-md);
-        display: flex;
-        justify-content: space-between;
-        z-index: 10;
-        pointer-events: none; /* Let clicks pass through except buttons */
-    }
-
-    .back-btn,
-    .share-btn {
-        pointer-events: auto;
-        background: rgba(0, 0, 0, 0.4);
-        backdrop-filter: blur(10px);
-        color: white;
-        border: none;
-        width: 44px;
-        height: 44px;
-        border-radius: var(--radius-full);
-        font-size: 1.3rem;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: all var(--transition-fast);
-        box-shadow: var(--shadow-sm);
-    }
-
-    .back-btn:hover,
-    .share-btn:hover {
-        background: rgba(0, 0, 0, 0.6);
-    }
-
-    .back-btn:active,
-    .share-btn:active {
-        transform: scale(0.95);
     }
 
     /* Swiper Styles */

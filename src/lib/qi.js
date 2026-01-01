@@ -186,6 +186,16 @@ export const qi = {
             }
         }
     },
+    setNavigationBar: (options) => {
+        if (isMyDefined) {
+            my.setNavigationBar(options);
+        } else {
+            console.log('Mock my.setNavigationBar:', options);
+            if (options.title) {
+                document.title = options.title;
+            }
+        }
+    },
     previewImage: (options) => {
         if (isMyDefined) {
             my.previewImage(options);

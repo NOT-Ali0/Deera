@@ -1,7 +1,7 @@
 <script>
   import { onMount, createEventDispatcher } from "svelte";
   import { qi } from "../lib/qi.js";
-    import { UserToken } from "../lib/UserInfo.js";
+  import { UserToken } from "../lib/UserInfo.js";
 
   const dispatch = createEventDispatcher();
 
@@ -9,6 +9,10 @@
   let isRefreshing = false;
 
   onMount(() => {
+    qi.setNavigationBar({
+      title: "Deera",
+      backgroundColor: "#ffffff",
+    });
     loadProducts();
   });
 
@@ -50,14 +54,6 @@
 </script>
 
 <div class="home-container">
-
-  <header>
-    <h1>Deera Market</h1>
-    <button class="refresh-btn" onclick={handleRefresh} disabled={isRefreshing}>
-      ↻
-    </button>
-  </header>
-
   <main>
     <div class="product-list">
       {#if products.length === 0}
@@ -91,46 +87,6 @@
   .home-container {
     padding: var(--spacing-md);
     padding-bottom: 100px; /* Space for fixed button */
-  }
-
-  header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: var(--spacing-lg);
-  }
-
-  header h1 {
-    margin: 0;
-    font-size: 1.75rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    letter-spacing: -0.5px;
-  }
-
-  .refresh-btn {
-    background: var(--surface);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-full);
-    width: 44px;
-    height: 44px;
-    font-size: 1.3rem;
-    cursor: pointer;
-    color: var(--text-secondary);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all var(--transition-fast);
-    box-shadow: var(--shadow-sm);
-  }
-
-  .refresh-btn:hover {
-    background: var(--background);
-    transform: rotate(90deg);
-  }
-
-  .refresh-btn:active {
-    transform: scale(0.95) rotate(90deg);
   }
 
   .product-list {
