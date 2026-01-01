@@ -56,7 +56,7 @@
 
     function handleContact() {
         qi.showActionSheet({
-            items: ["Call Seller", "Save to Favorites"],
+            items: ["Call Seller"],
             success: (res) => {
                 const index = res.index;
                 if (index === 0) {
@@ -120,7 +120,7 @@
                 title: "حذف المنتج",
                 content: "هل أنت متأكد من رغبتك في حذف هذا المنتج نهائياً؟",
                 confirmButtonText: "نعم، احذف",
-                cancelButtonText: "إلغاء",
+                // cancelButtonText: "إلغاء",
                 success: () => {
                     my.vibrate();
                     performDelete();
