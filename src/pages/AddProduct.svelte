@@ -10,7 +10,7 @@
     // Form Data
     let name = "";
     let price = "";
-    let oldPrice = ""; // For discounts
+    // let oldPrice = ""; // For discounts
     let description = "";
     let category = "Select Category";
     let images = [];
@@ -125,7 +125,7 @@
                     id: Date.now(),
                     name,
                     price,
-                    oldPrice,
+                    // oldPrice,
                     description,
                     category,
                     images, // Array of paths
@@ -205,9 +205,9 @@
         />
     </div>
 
-    <div class="form-group">
+    <!-- <div class="form-group">
         <label for="original-price"
-            >Original Price (Optional for discount)</label
+            >Original Price (Optional)</label
         >
         <input
             id="original-price"
@@ -215,7 +215,7 @@
             bind:value={oldPrice}
             placeholder="e.g. 30000"
         />
-    </div>
+    </div> -->
 
     <div class="form-group">
         <label>Category</label>

@@ -11,7 +11,7 @@
   onMount(() => {
     qi.setNavigationBar({
       title: "Deera",
-      backgroundColor: "#ffffff",
+      // backgroundColor: "#ffffff",
     });
     loadProducts();
   });
