@@ -38,34 +38,6 @@
 
         // Construct Google Maps URL
         const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${product.lat},${product.lng}`;
-
-        // Try to open with my.navigateTo if available
-        if (typeof my !== "undefined" && my.openLocation()) {
-            my.openLocation({
-                longitude: product.lng,
-                latitude: product.lat,
-                name: "Iraq",
-                address: "",
-                success: () => {
-                    qi.vibrateShort();
-                },
-                fail: () => {
-                    // Fallback: copy URL to clipboard
-                    qi.setClipboard({
-                        text: mapsUrl,
-                        success: () => {
-                            qi.showToast({
-                                content: "تم نسخ رابط الخريطة",
-                                type: "success",
-                            });
-                        },
-                    });
-                },
-            });
-        } else {
-
-            
-            // Fallback for environments without my.navigateTo
             qi.setClipboard({
                 text: mapsUrl,
                 success: () => {
@@ -75,7 +47,6 @@
                     });
                 },
             });
-        }
     }
 
     function handleContact() {
