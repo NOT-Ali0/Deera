@@ -33,14 +33,6 @@
         });
     }
 
-    function handleScroll(e) {
-        const { scrollLeft, clientWidth } = e.currentTarget;
-        const index = Math.round(scrollLeft / clientWidth);
-        if (currentImageIndex !== index) {
-            currentImageIndex = index;
-        }
-    }
-
     function handleOpenMap() {
         if (!product.lat || !product.lng) {
             qi.showToast({
@@ -175,8 +167,7 @@
     </button>
 
     <!-- Image Swiper -->
-    <div class="gallery-wrapper">
-        <div class="swiper-container" onscroll={handleScroll}>
+    <div class="swiper-container">
             {#each displayImages as img, i}
                 <!-- svelte-ignore a11y_click_events_have_key_events -->
                 <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
@@ -187,21 +178,7 @@
                     onclick={() => handlePreview(i)}
                 />
             {/each}
-        </div>
-
-        <!-- Dots and Gradient Overlay -->
-        <div class="gallery-overlay">
-            {#if displayImages.length > 1}
-                <div class="pagination-dots">
-                    {#each displayImages as _, i}
-                        <div
-                            class="dot"
-                            class:active={currentImageIndex === i}
-                        ></div>
-                    {/each}
-                </div>
-            {/if}
-        </div>
+        <!-- <div class="badge">{displayImages.length} Photos</div> -->
     </div>
 
     <div class="content">
