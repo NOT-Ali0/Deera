@@ -36,9 +36,6 @@
 
         isLoading = true;
         qi.showLoading({ content: "جاري تسجيل الدخول..." });
-
-        // Try silent login with my.getAuthCode if available (Mini App environment)
-        if (typeof my !== "undefined" && my.getAuthCode) {
             my.getAuthCode({
                 scopes: ["auth_base", "USER_ID"],
                 success: (res) => {
@@ -66,13 +63,7 @@
                         });
                 },
             });
-        } else {
-            // Mock/Browser environment
-            setTimeout(() => {
-                loginWithToken("mock_token_" + Date.now());
-            }, 1000);
-        }
-    }
+        } 
 
     function loginWithToken(authCode) {
         const userToken = {
@@ -87,7 +78,6 @@
             data: userToken,
             success: () => {
                 qi.hideLoading();
-                qi.vibrateShort();
                 qi.showToast({
                     content: "أهلاً بك، " + userToken.fullName,
                     type: "success",
