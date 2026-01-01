@@ -122,7 +122,7 @@
                 confirmButtonText: "نعم، احذف",
                 cancelButtonText: "إلغاء",
                 success: (res) => {
-                    if (res.confirm) {
+                    if (res) {
                         my.vibrate();
                         performDelete();
                     }
