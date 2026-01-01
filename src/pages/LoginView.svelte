@@ -101,7 +101,7 @@
     <div class="login-card">
         <header class="login-header">
             <h1 class="brand-title">Deera</h1>
-            <p class="login-subtitle">هلا بيك</p>
+            <p class="login-subtitle">جاهز؟ خلينا نبدأ</p>
         </header>
 
         <main class="form-container">
