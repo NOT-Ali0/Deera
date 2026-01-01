@@ -1,7 +1,7 @@
 <script>
     import { createEventDispatcher, onMount } from "svelte";
     import { qi } from "../lib/qi.js";
-    import { UserToken } from "../lib/UserInfo.js";
+    import {hideBackHome} from 'hylid-bridge'
     const dispatch = createEventDispatcher();
 
     // Prop from App.svelte
@@ -17,10 +17,10 @@
         qi.setNavigationBar({
             title: "تفاصيل المنتج",
         });
+        hideBackHome()
     });
 
     function closeDetail() {
-        qi.vibrateShort();
         dispatch("back");
     }
 
