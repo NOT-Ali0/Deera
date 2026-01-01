@@ -19,6 +19,11 @@
         });
     });
 
+    function closeDetail() {
+        qi.vibrateShort();
+        dispatch("back");
+    }
+
     function handlePreview(index) {
         qi.previewImage({
             urls: displayImages,
@@ -221,6 +226,7 @@
         min-height: 100vh;
         display: flex;
         flex-direction: column;
+        position: relative;
     }
 
     /* Manual Back Button */

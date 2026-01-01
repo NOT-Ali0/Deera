@@ -62,7 +62,6 @@
             },
             fail: (err) => {
                 console.error("getSetting failed:", err);
-                // Attempt to proceed anyway
                 qi.chooseImage({
                     count: 5 - images.length,
                     success: (res) => {
@@ -118,7 +117,7 @@
 
         qi.showLoading({ content: "Publishing..." });
 
-        // Get Location for Geo-tagging
+        // Get Location 
         qi.getLocation({
             success: (location) => {
                 const newProduct = {
@@ -128,12 +127,11 @@
                     description,
                     category,
                     images, // Array of paths
-                    image: images.length > 0 ? images[0] : "", // Main thumb for legacy support
+                    image: images.length > 0 ? images[0] : "", 
                     video,
                     lat: location.latitude,
                     lng: location.longitude,
                     date: new Date().toISOString(),
-                    // Attach seller information from userToken
                     sellerPhone: userToken?.phoneNumber || "",
                     sellerName: userToken?.fullName || "Unknown",
                 };
