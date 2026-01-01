@@ -39,38 +39,38 @@
         }
 
         // Check album permission first
-        // my.getSetting({
-        //     success: (res) => {
-        //         const authSetting = res.authSetting || {};
-        //         if (authSetting["scope.album"] === false) {
-        //             qi.showToast({
-        //                 content: "يرجى تفعيل صلاحية الألبوم من الإعدادات",
-        //                 type: "none",
-        //             });
-        //             my.showAuthGuide({
-        //                 authCode: "ALBUM",
-        //             });
-        //         } else {
-        //             qi.chooseImage({
-        //                 count: 5 - images.length,
-        //                 success: (res) => {
-        //                     const newPaths = res.apFilePaths;
-        //                     images = [...images, ...newPaths];
-        //                 },
-        //             });
-        //         }
-        //     },
-        //     fail: (err) => {
-        //         console.error("getSetting failed:", err);
-        //         qi.chooseImage({
-        //             count: 5 - images.length,
-        //             success: (res) => {
-        //                 const newPaths = res.apFilePaths;
-        //                 images = [...images, ...newPaths];
-        //             },
-        //         });
-        //     },
-        // });
+        my.getSetting({
+            success: (res) => {
+                const authSetting = res.authSetting || {};
+                if (authSetting["scope.album"] === false) {
+                    qi.showToast({
+                        content: "يرجى تفعيل صلاحية الألبوم من الإعدادات",
+                        type: "none",
+                    });
+                    my.showAuthGuide({
+                        authCode: "ALBUM",
+                    });
+                } else {
+                    qi.chooseImage({
+                        count: 5 - images.length,
+                        success: (res) => {
+                            const newPaths = res.apFilePaths;
+                            images = [...images, ...newPaths];
+                        },
+                    });
+                }
+            },
+            fail: (err) => {
+                console.error("getSetting failed:", err);
+                qi.chooseImage({
+                    count: 5 - images.length,
+                    success: (res) => {
+                        const newPaths = res.apFilePaths;
+                        images = [...images, ...newPaths];
+                    },
+                });
+            },
+        });
     }
 
     function handlePreviewImage(index) {
@@ -86,7 +86,7 @@
 
     function chooseVideoNative() {
         // qi.showToast({ content: "Coming soon...", type: "none" });
-            chooseVideo({
+            my.chooseVideo({
                 sourceType: ["album", "camera"],
                 compressed: true,
                 maxDuration: 60,
