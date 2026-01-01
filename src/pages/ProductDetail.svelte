@@ -64,13 +64,14 @@
                             qi.makePhoneCall({ number: phoneNumber });
                         },
                     });
-                } else if (index === 1) {
-                    qi.vibrateShort();
-                    qi.showToast({
-                        content: "Added to Favorites",
-                        type: "success",
-                    });
-                }
+                } 
+                // else if (index === 1) {
+                //     qi.vibrateShort();
+                //     qi.showToast({
+                //         content: "Added to Favorites",
+                //         type: "success",
+                //     });
+                // }
             },
         });
     }
