@@ -86,51 +86,51 @@
         images = images.filter((_, i) => i !== index);
     }
 
-    function handleAddVideo() {
-        qi.showLoading({ content: "Init Video..." });
+    // function handleAddVideo() {
+    //     qi.showLoading({ content: "Init Video..." });
 
-        if (typeof my === "undefined") {
-            qi.chooseVideo({
-                success: (res) => {
-                    video = res.tempFilePath;
-                    qi.hideLoading();
-                },
-            });
-            return;
-        }
+    //     if (typeof my === "undefined") {
+    //         qi.chooseVideo({
+    //             success: (res) => {
+    //                 video = res.tempFilePath;
+    //                 qi.hideLoading();
+    //             },
+    //         });
+    //         return;
+    //     }
 
-        // Check camera permission first
-        my.getSetting({
-            success: (res) => {
-                console.log("Settings:", JSON.stringify(res));
-                const authSetting = res.authSetting || {};
+    //     // Check camera permission first
+    //     my.getSetting({
+    //         success: (res) => {
+    //             console.log("Settings:", JSON.stringify(res));
+    //             const authSetting = res.authSetting || {};
 
-                if (authSetting["scope.camera"] === false) {
-                    // Permission denied - guide to settings
-                    qi.hideLoading();
-                    qi.showToast({
-                        content:
-                            "يرجى تفعيل صلاحية الكاميرا من الإعدادات لنتمكن من رفع الفيديو",
-                        type: "none",
-                    });
-                    my.showAuthGuide({
-                        authCode: "CAMERA",
-                    });
-                } else {
-                    // Permission granted - proceed with video selection
-                    chooseVideoNative();
-                }
-            },
-            fail: (err) => {
-                console.error("getSetting failed:", JSON.stringify(err));
-                // Attempt anyway - the system might prompt for permission
-                chooseVideoNative();
-            },
-        });
-    }
+    //             if (authSetting["scope.camera"] === false) {
+    //                 // Permission denied - guide to settings
+    //                 qi.hideLoading();
+    //                 qi.showToast({
+    //                     content:
+    //                         "يرجى تفعيل صلاحية الكاميرا من الإعدادات لنتمكن من رفع الفيديو",
+    //                     type: "none",
+    //                 });
+    //                 my.showAuthGuide({
+    //                     authCode: "CAMERA",
+    //                 });
+    //             } else {
+    //                 // Permission granted - proceed with video selection
+    //                 chooseVideoNative();
+    //             }
+    //         },
+    //         fail: (err) => {
+    //             console.error("getSetting failed:", JSON.stringify(err));
+    //             // Attempt anyway - the system might prompt for permission
+    //             chooseVideoNative();
+    //         },
+    //     });
+    // }
 
     function chooseVideoNative() {
-        try {
+        qi.showToast({ content: "Coming soon...", type: "none" });
             my.chooseVideo({
                 sourceType: ["album", "camera"],
                 compressed: true,
@@ -148,10 +148,6 @@
                     });
                 },
             });
-        } catch (e) {
-            qi.hideLoading();
-            my.alert({ title: "Error", content: e.message });
-        }
     }
 
     function handleRemoveVideo() {
@@ -294,7 +290,7 @@
                     >
                 </div>
             {:else}
-                <button class="add-media-btn" onclick={handleAddVideo}>
+                <button class="add-media-btn" onclick={chooseVideoNative}>
                     <span>+</span> Video
                 </button>
             {/if}
