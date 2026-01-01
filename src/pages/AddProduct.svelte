@@ -181,7 +181,7 @@
 </script>
 
 <div class="add-container">
-    <h2>Post New Ad</h2>
+    <h2>Add Post</h2>
 
     <div class="form-group">
         <label>Product Name</label>

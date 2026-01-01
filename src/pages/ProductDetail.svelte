@@ -173,7 +173,7 @@
                 onclick={() => handlePreview(i)}
             />
         {/each}
-        <div class="badge">{displayImages.length} Photos</div>
+        <!-- <div class="badge">{displayImages.length} Photos</div> -->
     </div>
 
     <div class="content">
@@ -237,30 +237,41 @@
         padding-bottom: 100px; /* Space for fixed bottom bar */
     }
 
-    /* Floating Back Button */
-    .back-btn-floating {
-        position: fixed;
-        top: 20px;
-        left: 20px;
-        width: 44px;
-        height: 44px;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.7);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.3);
+    /* Manual Back Button */
+    .manual-back-btn {
+        position: absolute;
+        top: 16px;
+        left: 16px;
+        z-index: 100;
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        border: none;
+        padding: 8px 16px;
+        border-radius: 100px;
         display: flex;
         align-items: center;
-        justify-content: center;
-        z-index: 1010;
-        cursor: pointer;
-        color: var(--text-primary);
+        gap: 8px;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         transition: transform 0.2s ease;
     }
 
-    .back-btn-floating:active {
+    .manual-back-btn:active {
         transform: scale(0.95);
+        background: rgba(255, 255, 255, 0.95);
+    }
+
+    .manual-back-btn .icon {
+        font-size: 1.2rem;
+        line-height: 1;
+        color: var(--text-primary);
+        margin-top: -2px; /* Visual tweak */
+    }
+
+    .manual-back-btn .text {
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: var(--text-primary);
     }
 
     /* Swiper Styles */
