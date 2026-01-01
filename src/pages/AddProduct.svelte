@@ -196,7 +196,7 @@
                         // Delay to show toast then navigate
                         setTimeout(() => {
                             if (onsuccess) onsuccess();
-                        }, 500);
+                        }, 1000);
                     },
                 });
             },

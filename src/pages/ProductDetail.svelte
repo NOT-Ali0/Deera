@@ -150,7 +150,7 @@
                         });
                         setTimeout(() => {
                             if (onback) onback();
-                        }, 500);
+                        }, 1000);
                     },
                     fail: (err) => {
                         my.alert({

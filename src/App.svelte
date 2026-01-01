@@ -15,21 +15,8 @@
 
   onMount(() => {
     // Check authntication
-    // RemoveToken();
     checkAuthentication();
   });
-
-  let RemoveToken = () => {
-    my.removeStorage({
-      key: "userToken",
-      success: () => {
-        userToken = null;
-        isAuthenticated = false;
-        currentPage = "home";
-      },
-    });
-  };
-
   function checkAuthentication() {
     qi.getStorage({
       key: "userToken",
