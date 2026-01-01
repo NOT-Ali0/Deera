@@ -99,6 +99,11 @@
 
 <div class="login-page" in:fade={{ duration: 400 }}>
     <div class="login-card">
+        <header class="login-header">
+            <h1 class="brand-title">Deera</h1>
+            <p class="login-subtitle">هلا بيك</p>
+        </header>
+
         <main class="form-container">
             <div class="input-group">
                 <label for="fullName">الاسم الكامل</label>
@@ -182,7 +187,34 @@
         box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
         display: flex;
         flex-direction: column;
-        gap: var(--spacing-xl, 32px);
+        gap: var(--spacing-lg, 24px);
+    }
+
+    .login-header {
+        text-align: center;
+        margin-bottom: var(--spacing-sm);
+    }
+
+    .brand-title {
+        font-family: "Outfit", sans-serif;
+        font-size: 2.5rem;
+        font-weight: 800;
+        margin: 0;
+        background: linear-gradient(
+            135deg,
+            var(--primary-color, #007bff),
+            var(--primary-dark, #0056b3)
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        letter-spacing: -1px;
+    }
+
+    .login-subtitle {
+        color: var(--text-secondary, #666);
+        font-size: 1rem;
+        margin-top: 4px;
+        font-weight: 500;
     }
 
     .form-container {
