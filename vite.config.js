@@ -6,5 +6,6 @@ export default defineConfig({
   plugins: [svelte()],
   server:{
     allowedHosts:true
-  }
+  },
+  base:process.env.VITE_BASE_PATH || '/Deera'
 })
