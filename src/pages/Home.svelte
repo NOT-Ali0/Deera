@@ -1,12 +1,14 @@
 <script>
-  import { onMount, createEventDispatcher } from "svelte";
+  import { onMount } from "svelte";
   import { qi } from "../lib/qi.js";
   import { formatNumber, CURRENCY_SYMBOL } from "../lib/utils.js";
 
-  const dispatch = createEventDispatcher();
+  // Svelte 5 Props
+  let { onviewDetail, onadd, userToken = null } = $props();
 
-  let products = [];
-  let isRefreshing = false;
+  // Svelte 5 State
+  let products = $state([]);
+  let isRefreshing = $state(false);
 
   onMount(() => {
     qi.setNavigationBar({
@@ -26,6 +28,9 @@
           products = res.data;
         }
       },
+      fail: () => {
+        isRefreshing = false;
+      },
     });
   }
 
@@ -41,11 +46,11 @@
   // }
 
   function handlePostAd() {
-    dispatch("add");
+    if (onadd) onadd();
   }
 
   function goToDetail(product) {
-    dispatch("viewDetail", product);
+    if (onviewDetail) onviewDetail(product);
   }
 </script>
 
@@ -54,17 +59,13 @@
     <div class="product-list">
       {#if products.length === 0}
         <div class="empty-state">
-          <p>No ads nearby. Be the first to post!</p>
+          <p>لا توجد إعلانات قريبة. كن أول من ينشر!</p>
         </div>
       {:else}
         {#each products as product (product.id)}
           <!-- svelte-ignore a11y_click_events_have_key_events -->
-          <div
-            class="product-card"
-            onclick={() => goToDetail(product)}
-            role="button"
-            tabindex="0"
-          >
+          <!-- svelte-ignore a11y_no_static_element_interactions -->
+          <div class="product-card" onclick={() => goToDetail(product)}>
             <img src={product.image} alt={product.name} />
             <div class="info">
               <h3>{product.name}</h3>
@@ -77,6 +78,13 @@
                   {formatNumber(product.price)} <small>{CURRENCY_SYMBOL}</small>
                 </span>
               </div>
+
+              {#if product.governorate && product.governorate !== "اختر المحافظة"}
+                <div class="location-line">
+                  <span class="loc-icon">📍</span>
+                  {product.governorate}
+                </div>
+              {/if}
             </div>
           </div>
         {/each}
@@ -84,7 +92,7 @@
     </div>
   </main>
 
-  <button class="post-ad-btn" onclick={handlePostAd}>Add Post</button>
+  <button class="post-ad-btn" onclick={handlePostAd}>إضافة إعلان</button>
 </div>
 
 <style>
@@ -171,6 +179,19 @@
     color: var(--text-muted);
     text-decoration: line-through;
     font-weight: 500;
+  }
+
+  .location-line {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.75rem;
+    color: #888;
+    margin-top: 6px;
+  }
+
+  .loc-icon {
+    font-size: 0.8rem;
   }
 
   .post-ad-btn {

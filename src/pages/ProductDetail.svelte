@@ -1,17 +1,20 @@
 <script>
-    import { createEventDispatcher, onMount } from "svelte";
+    import { onMount } from "svelte";
     import { qi } from "../lib/qi.js";
     import { formatNumber, CURRENCY_SYMBOL } from "../lib/utils.js";
-    const dispatch = createEventDispatcher();
 
-    // Prop from App.svelte
-    export let product = {};
+    // Svelte 5 Props
+    let { product = {}, onback } = $props();
 
-    // Computed
-    $: displayImages =
+    // Svelte 5 State
+    let currentImageIndex = $state(0);
+
+    // Svelte 5 Derived State
+    let displayImages = $derived(
         product.images && product.images.length > 0
             ? product.images
-            : [product.image || "https://placehold.co/300"];
+            : [product.image || "https://placehold.co/300"],
+    );
 
     onMount(() => {
         qi.setNavigationBar({
@@ -20,7 +23,7 @@
     });
 
     function closeDetail() {
-        dispatch("back");
+        if (onback) onback();
     }
 
     function handlePreview(index) {
@@ -28,6 +31,14 @@
             urls: displayImages,
             current: index,
         });
+    }
+
+    function handleScroll(e) {
+        const { scrollLeft, clientWidth } = e.currentTarget;
+        const index = Math.round(scrollLeft / clientWidth);
+        if (currentImageIndex !== index) {
+            currentImageIndex = index;
+        }
     }
 
     function handleOpenMap() {
@@ -141,7 +152,7 @@
                             type: "success",
                         });
                         setTimeout(() => {
-                            dispatch("back");
+                            if (onback) onback();
                         }, 500);
                     },
                     fail: (err) => {
@@ -164,18 +175,33 @@
     </button>
 
     <!-- Image Swiper -->
-    <div class="swiper-container">
-        {#each displayImages as img, i}
-            <!-- svelte-ignore a11y_click_events_have_key_events -->
-            <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
-            <img
-                src={img}
-                alt={product.name}
-                class="slide-image"
-                onclick={() => handlePreview(i)}
-            />
-        {/each}
-        <!-- <div class="badge">{displayImages.length} Photos</div> -->
+    <div class="gallery-wrapper">
+        <div class="swiper-container" onscroll={handleScroll}>
+            {#each displayImages as img, i}
+                <!-- svelte-ignore a11y_click_events_have_key_events -->
+                <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
+                <img
+                    src={img}
+                    alt={product.name}
+                    class="slide-image"
+                    onclick={() => handlePreview(i)}
+                />
+            {/each}
+        </div>
+
+        <!-- Dots and Gradient Overlay -->
+        <div class="gallery-overlay">
+            {#if displayImages.length > 1}
+                <div class="pagination-dots">
+                    {#each displayImages as _, i}
+                        <div
+                            class="dot"
+                            class:active={currentImageIndex === i}
+                        ></div>
+                    {/each}
+                </div>
+            {/if}
+        </div>
     </div>
 
     <div class="content">
@@ -183,6 +209,13 @@
             <h1>{product.name}</h1>
             <span class="category-tag">{product.category || "General"}</span>
         </div>
+
+        {#if product.governorate && product.governorate !== "اختر المحافظة"}
+            <div class="detail-location">
+                <span class="loc-icon">📍</span>
+                {product.governorate}
+            </div>
+        {/if}
 
         <div class="price-container">
             {#if product.oldPrice && parseFloat(product.oldPrice) > parseFloat(product.price)}
@@ -287,15 +320,23 @@
         color: var(--text-primary);
     }
 
-    /* Swiper Styles */
+    /* Gallery Styles */
+    .gallery-wrapper {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 1 / 1;
+        overflow: hidden;
+    }
+
     .swiper-container {
         width: 100%;
-        height: 380px;
+        height: 100%;
         background: var(--background);
         display: flex;
         overflow-x: auto;
         scroll-snap-type: x mandatory;
         position: relative;
+        scrollbar-width: none;
     }
 
     .swiper-container::-webkit-scrollbar {
@@ -310,18 +351,44 @@
         scroll-snap-align: start;
     }
 
-    .badge {
+    /* Overlay with Bottom Gradient and Dots */
+    .gallery-overlay {
         position: absolute;
-        bottom: 30px;
-        right: var(--spacing-md);
-        background: rgba(0, 0, 0, 0.6);
-        backdrop-filter: blur(8px);
-        color: white;
-        padding: 6px 14px;
-        border-radius: 12px;
-        font-size: 0.85rem;
-        font-weight: 600;
-        z-index: 6;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 80px;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.4), transparent);
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        padding-bottom: 24px;
+        pointer-events: none;
+        z-index: 10;
+    }
+
+    .pagination-dots {
+        display: flex;
+        gap: 8px;
+        background: rgba(0, 0, 0, 0.2);
+        padding: 6px 10px;
+        border-radius: 20px;
+        backdrop-filter: blur(4px);
+    }
+
+    .dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.4);
+        transition: all 0.2s ease;
+    }
+
+    .dot.active {
+        background: #fff;
+        transform: scale(1.2);
+        width: 12px;
+        border-radius: 10px;
     }
 
     .content {
@@ -361,6 +428,19 @@
         font-size: 0.8rem;
         font-weight: 700;
         white-space: nowrap;
+    }
+
+    .detail-location {
+        font-size: 0.95rem;
+        color: var(--text-secondary);
+        margin-bottom: var(--spacing-md);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .detail-location .loc-icon {
+        font-size: 1rem;
     }
 
     .price-container {

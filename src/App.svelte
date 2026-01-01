@@ -46,13 +46,13 @@
     });
   }
 
-  function handleLoginSuccess(event) {
-    userToken = event.detail;
+  function handleLoginSuccess(data) {
+    userToken = data.detail || data;
     isAuthenticated = true;
   }
 
-  function handleNavigateToDetail(event) {
-    selectedProduct = event.detail;
+  function handleNavigateToDetail(product) {
+    selectedProduct = product;
     currentPage = "detail";
   }
 
@@ -84,19 +84,19 @@
   {:else if !isAuthenticated}
     <!-- Show login view if not authenticated -->
     <div in:fade={{ duration: 300 }}>
-      <LoginView on:loginSuccess={handleLoginSuccess} />
+      <LoginView onloginSuccess={handleLoginSuccess} />
     </div>
   {:else if currentPage === "home"}
     <div in:fade={{ duration: 300 }}>
       <Home
-        on:viewDetail={handleNavigateToDetail}
-        on:add={handleAddProduct}
+        onviewDetail={handleNavigateToDetail}
+        onadd={handleAddProduct}
         {userToken}
       />
     </div>
   {:else if currentPage === "detail"}
     <div in:fade={{ duration: 300 }}>
-      <ProductDetail product={selectedProduct} on:back={handleNavigateBack} />
+      <ProductDetail product={selectedProduct} onback={handleNavigateBack} />
     </div>
   {:else if currentPage === "add-product"}
     <div in:fade={{ duration: 300 }}>

@@ -1,12 +1,15 @@
 <script>
-    import { createEventDispatcher, onMount } from "svelte";
+    import { onMount } from "svelte";
     import { fade } from "svelte/transition";
     import { qi } from "../lib/qi.js";
-    const dispatch = createEventDispatcher();
 
-    let fullName = "";
-    let phoneNumber = "";
-    let isLoading = false;
+    // Svelte 5 Props
+    let { onloginSuccess } = $props();
+
+    // Svelte 5 State
+    let fullName = $state("");
+    let phoneNumber = $state("");
+    let isLoading = $state(false);
 
     onMount(() => {
         qi.setNavigationBar({
@@ -59,6 +62,11 @@
                         });
                     });
             },
+            fail: () => {
+                qi.hideLoading();
+                isLoading = false;
+                qi.showToast({ content: "فشل الحصول على الرمز", type: "fail" });
+            },
         });
     }
 
@@ -80,7 +88,7 @@
                     type: "success",
                 });
                 setTimeout(() => {
-                    dispatch("loginSuccess", userToken);
+                    if (onloginSuccess) onloginSuccess(userToken);
                 }, 500);
             },
             fail: () => {
@@ -94,12 +102,6 @@
 
 <div class="login-page" in:fade={{ duration: 400 }}>
     <div class="login-card">
-        <!-- Header Section -->
-        <!-- Header Section -->
-
-        <!-- Form Section -->
-
-        <!-- Form Section -->
         <main class="form-container">
             <div class="input-group">
                 <label for="fullName">الاسم الكامل</label>
@@ -143,7 +145,6 @@
             </button>
         </main>
 
-        <!-- Footer Section -->
         <footer class="footer">
             <div class="secure-badge">
                 <svg
@@ -160,6 +161,7 @@
                     ></rect>
                     <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
                 </svg>
+                <span>آمن 100%</span>
             </div>
         </footer>
     </div>
