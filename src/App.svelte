@@ -101,8 +101,8 @@
   {:else if currentPage === "add-product"}
     <div in:fade={{ duration: 300 }}>
       <AddProduct
-        on:success={handleSaveSuccess}
-        on:cancel={handleCancelAdd}
+        onsuccess={handleSaveSuccess}
+        oncancel={handleCancelAdd}
         {userToken}
       />
     </div>

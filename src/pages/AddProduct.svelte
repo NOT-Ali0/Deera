@@ -1,27 +1,55 @@
 <script>
-    import { createEventDispatcher } from "svelte";
     import { qi } from "../lib/qi.js";
     // import {chooseVideo} from "hylid-bridge"
-    const dispatch = createEventDispatcher();
 
-    // User token prop from App.svelte
-    export let userToken = null;
+    // Svelte 5 Props
+    let { userToken = null, onsuccess, oncancel } = $props();
 
-    // Form Data
-    let name = "";
-    let price = "";
-    // let oldPrice = ""; // For discounts
-    let description = "";
-    let category = "Select Category";
-    let images = [];
-    let video = "";
+    // Svelte 5 State
+    let name = $state("");
+    let price = $state("");
+    let description = $state("");
+    let category = $state("اختر الفئة");
+    let governorate = $state("اختر المحافظة");
+    let images = $state([]);
+    let video = $state("");
+
+    const categories = ["إلكترونيات", "أثاث", "ملابس", "أخرى"];
+    const governorates = [
+        "بغداد",
+        "البصرة",
+        "نينوى",
+        "أربيل",
+        "النجف",
+        "ذي قار",
+        "كركوك",
+        "بابل",
+        "كربلاء",
+        "السليمانية",
+        "الأنبار",
+        "ميسان",
+        "دهوك",
+        "المثنى",
+        "صلاح الدين",
+        "واسط",
+        "القادسية",
+        "ديالى",
+    ];
 
     function handleCategory() {
-        const categories = ["Electronics", "Furniture", "Clothing"];
         qi.showActionSheet({
             items: categories,
             success: (res) => {
                 category = categories[res.index];
+            },
+        });
+    }
+
+    function handleGovernorate() {
+        qi.showActionSheet({
+            items: governorates,
+            success: (res) => {
+                governorate = governorates[res.index];
             },
         });
     }
@@ -55,8 +83,7 @@
                     qi.chooseImage({
                         count: 5 - images.length,
                         success: (res) => {
-                            const newPaths = res.apFilePaths;
-                            images = [...images, ...newPaths];
+                            images = [...images, ...res.apFilePaths];
                         },
                     });
                 }
@@ -66,8 +93,7 @@
                 qi.chooseImage({
                     count: 5 - images.length,
                     success: (res) => {
-                        const newPaths = res.apFilePaths;
-                        images = [...images, ...newPaths];
+                        images = [...images, ...res.apFilePaths];
                     },
                 });
             },
@@ -111,12 +137,18 @@
     }
 
     function handleSubmit() {
-        if (!name || !price || !description || category === "Select Category") {
-            qi.showToast({ content: "Please fill all fields", type: "none" });
+        if (
+            !name ||
+            !price ||
+            !description ||
+            category === "اختر الفئة" ||
+            governorate === "اختر المحافظة"
+        ) {
+            qi.showToast({ content: "يرجى ملء جميع الحقول", type: "none" });
             return;
         }
 
-        qi.showLoading({ content: "Publishing..." });
+        qi.showLoading({ content: "جاري النشر..." });
 
         // Get Location
         qi.getLocation({
@@ -125,28 +157,27 @@
                     id: Date.now(),
                     name,
                     price,
-                    // oldPrice,
                     description,
                     category,
-                    images, // Array of paths
+                    governorate,
+                    images: [...images], // Array of paths
                     image: images.length > 0 ? images[0] : "",
                     video,
                     lat: location.latitude,
                     lng: location.longitude,
                     date: new Date().toISOString(),
                     sellerPhone: userToken?.phoneNumber || "",
-                    sellerName: userToken?.fullName || "Unknown",
+                    sellerName: userToken?.fullName || "مجهول",
                 };
 
                 saveProduct(newProduct);
             },
             fail: (err) => {
                 my.alert({
-                    title: "Selection Failed",
+                    title: "فشل الحصول على الموقع",
                     content: JSON.stringify(err),
                 });
                 qi.hideLoading();
-                qi.showToast({ content: "Location failed", type: "fail" });
             },
         });
     }
@@ -164,12 +195,12 @@
                     success: () => {
                         qi.hideLoading();
                         qi.showToast({
-                            content: "Published!",
+                            content: "تم النشر بنجاح!",
                             type: "success",
                         });
                         // Delay to show toast then navigate
                         setTimeout(() => {
-                            dispatch("success");
+                            if (onsuccess) onsuccess();
                         }, 1000);
                     },
                 });
@@ -178,50 +209,59 @@
     }
 
     function handleCancel() {
-        dispatch("cancel");
+        if (oncancel) oncancel();
     }
 </script>
 
 <div class="add-container">
-    <h2>Add Post</h2>
+    <h2>إضافة إعلان جديد</h2>
 
     <div class="form-group">
-        <label for="product-name">Product Name</label>
+        <label for="product-name">اسم المنتج</label>
         <input
             id="product-name"
             type="text"
             bind:value={name}
-            placeholder="e.g. iPhone 14 Pro"
+            placeholder="مثال: آيفون 14 برو"
         />
     </div>
 
     <div class="form-group">
-        <label for="sale-price">Sale Price (Price to pay)</label>
+        <label for="sale-price">السعر (دينار عراقي)</label>
         <input
             id="sale-price"
             type="number"
             bind:value={price}
-            placeholder="e.g. 25000"
+            placeholder="مثال: 25000"
         />
     </div>
 
-    <!-- <div class="form-group">
-        <label for="original-price"
-            >Original Price (Optional)</label
+    <div class="form-group">
+        <label for="governorate-select">المحافظة</label>
+        <button
+            id="governorate-select"
+            type="button"
+            class="selector"
+            onclick={handleGovernorate}
         >
-        <input
-            id="original-price"
-            type="number"
-            bind:value={oldPrice}
-            placeholder="e.g. 30000"
-        />
-    </div> -->
+            <span class="val">
+                <span class="icon">📍</span>
+                {governorate}
+            </span>
+            <span class="arrow">▼</span>
+        </button>
+    </div>
 
     <div class="form-group">
-        <label>Category</label>
-        <div class="selector" onclick={handleCategory}>
+        <label for="category-select">الفئة</label>
+        <button
+            id="category-select"
+            type="button"
+            class="selector"
+            onclick={handleCategory}
+        >
             {category} <span class="arrow">▼</span>
-        </div>
+        </button>
     </div>
 
     <div class="form-group">
@@ -235,8 +275,8 @@
     </div>
 
     <div class="media-section">
-        <label>Photos ({images.length}/5)</label>
-        <div class="media-grid">
+        <label for="photos-input">الصور ({images.length}/5)</label>
+        <div id="photos-input" class="media-grid">
             {#each images as img, i}
                 <div class="media-item">
                     <img
@@ -259,8 +299,8 @@
     </div>
 
     <div class="media-section">
-        <label>Video</label>
-        <div class="media-grid">
+        <label for="video-input">فيديو</label>
+        <div id="video-input" class="media-grid">
             {#if video}
                 <div class="media-item video-item">
                     <div class="video-icon">▶</div>
@@ -326,7 +366,8 @@
     }
 
     input:focus,
-    textarea:focus {
+    textarea:focus,
+    .selector:focus {
         outline: none;
         border-color: var(--primary-color);
         box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
@@ -339,6 +380,24 @@
         cursor: pointer;
         color: var(--text-primary);
         background: var(--background);
+        border: 2px solid var(--border-color);
+        border-radius: var(--radius-md);
+        padding: 14px;
+        width: 100%;
+        font-family: inherit;
+        font-size: 1rem;
+        transition: all var(--transition-fast);
+        text-align: left;
+    }
+
+    .val {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .icon {
+        font-size: 1.1rem;
     }
 
     .selector:hover {
