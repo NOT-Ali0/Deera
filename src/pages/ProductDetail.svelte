@@ -343,7 +343,7 @@
         justify-content: center;
         padding-bottom: 24px;
         pointer-events: none; /* Let clicks pass through to images */
-        z-index: 10;
+        z-index: 6;
     }
 
     .pagination-dots {
