@@ -14,20 +14,18 @@
   let isCheckingAuth = true;
 
   onMount(() => {
-    RemoveToken()
-    my.RemoveStroge
     // Check authntication
     checkAuthentication();
   });
-  let RemoveToken = () => {
-    my.removeStorage({
-      key: "userToken",
-      success: () => {
-        userToken = null;
-        isAuthenticated = false;
-      currentPage = "home";
-    },
-  });
+  // let RemoveToken = () => {
+  //   my.removeStorage({
+  //     key: "userToken",
+  //     success: () => {
+  //       userToken = null;
+  //       isAuthenticated = false;
+  //     currentPage = "home";
+  //   },
+  // });
 }
 
   function checkAuthentication() {
