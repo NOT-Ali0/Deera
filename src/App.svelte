@@ -26,7 +26,7 @@
   //     currentPage = "home";
   //   },
   // });
-}
+
 
   function checkAuthentication() {
     qi.getStorage({
